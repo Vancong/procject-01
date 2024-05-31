@@ -2,14 +2,16 @@ const express = require('express')
 const app = express()
 const port = 3000
 
+app.set('views', './views');
+app.set('view engine', 'pug');
+
 app.get('/', (req, res) => {
-    res.send("Trang chu");
+    res.render('client/pages/home/index.pug');
   })
 
 
-
 app.get('/product',(req, res) => {
-    res.send("Trang san pham");
+    res.render('client/pages/product/index.pug');
 })
 
 
