@@ -1,4 +1,12 @@
 extends ../../layout/default.pug
 include ../../mixins/box-header.pug
+
 block main
-     +box("Trang san pham")
+  +box("Trang san pham")
+  
+  each item in products
+    img(src=item.thumbnail, alt=item.title)
+    p  #{item.title}
+    p Gia cu #{item.price  }$
+    p giam #{item.discountPercentage} %
+    p gia moi #{item.priceNew}$

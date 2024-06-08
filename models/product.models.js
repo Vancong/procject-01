@@ -15,10 +15,10 @@ const productSchema= new mongoose.Schema (
     }
 )
 
-const product=mongoose.model(
+const productDtb=mongoose.model(
     'product',
      productSchema,   
-    "product"
+    "products"
 );
 
-module.exports=product;
+module.exports=productDtb;
