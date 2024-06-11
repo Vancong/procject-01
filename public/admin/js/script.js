@@ -20,7 +20,31 @@ if (listButton.length>0) {
     const buttonCr=document.querySelector(`[button-status="${statusCr}"]`);
     // console.log(buttonCr);
    if (buttonCr) {
-    buttonCr.classList.add("active");
+    buttonCr.classList.add("active");  // them css cho nut hien tai
    }
 }
 
+//   form search
+
+    const fromSearch=document.querySelector("[form-search]");
+    // console.log(fromSearch);
+    if(fromSearch){
+        const url=new URL(window.location.href);
+        fromSearch.addEventListener("submit",(event) => {
+            event.preventDefault(); // ham ngan chan load lai trang
+            const keyword=event.target.elements.keyword.value; // lay gia tri cua keyword
+            if (keyword) {
+                url.searchParams.set("keyword",keyword);
+            }
+            else {
+                url.searchParams.delete("keyword");
+            }
+            window.location.href=url.href;
+            
+           
+        });
+    }
+
+
+
+// end from  search

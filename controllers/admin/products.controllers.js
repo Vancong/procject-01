@@ -14,7 +14,7 @@ module.exports.index= async (req, res) => {
     let keyword="";
 
     if (req.query.keyword){
-        const regax= new RegExp(req.query.keyword,"i");  //tim kiem tuong doi
+        const regax= new RegExp(req.query.keyword,"i");  //tim kiem tuong doi  "i" khong phan biet in hoa thuong
         find.title=regax;
         keyword=req.query.keyword;
     }
