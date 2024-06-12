@@ -1,5 +1,5 @@
-const Prodcut=require('../../models/product.models.js');
-
+const Product=require('../../models/product.models.js');
+const paginationHelpers=require('../../helpers/pagination.helpers.js')
 module.exports.index= async (req, res) => {
     const find= {
       deleted: false
@@ -42,24 +42,13 @@ module.exports.index= async (req, res) => {
 
     //phan trang
 
-    const pagination={
-        currentPage:1,
-        limitItem:4
-    };
-    if (req.query.page) {
-        pagination.currentPage=parseInt(req.query.page);
-    }
-    pagination.skip=(pagination.currentPage-1)*pagination.limitItem;
-
-    const countProduct= await Prodcut.countDocuments(find); // tinh tong so ban ghi
-    const sumPage=Math.ceil(countProduct/pagination.limitItem);
-    pagination.totalPage=sumPage;
-    console.log(pagination);
+    // const pagination= await paginationHelpers(req,find);
+    const pagination = await paginationHelpers(req,find);
 
     //end phan trang  await Prodcut
     
 
-    const products= await Prodcut
+    const products= await Product
       .find(find)   // him tim kiem
       .limit(pagination.limitItem)     // gioi han bao nhieu ban ghi
       .skip(pagination.skip);     // tim  tu trang bao nhieu
