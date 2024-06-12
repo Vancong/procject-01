@@ -44,7 +44,19 @@ if (listButton.length>0) {
            
         });
     }
-
-
-
 // end from  search
+
+// phan trang
+    const buttonPage=document.querySelectorAll(".page-link");
+    // console.log(buttonPage);
+    if (buttonPage.length>0) {
+    let url=new URL(window.location.href);
+    buttonPage.forEach(button => {
+        button.addEventListener("click",()=>{
+            const page=button.getAttribute("page");
+            url.searchParams.set("page",page);
+            window.location.href=url.href;
+        })
+    });
+    }
+//end phan trang
