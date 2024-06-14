@@ -60,3 +60,60 @@ if (listButton.length>0) {
     });
     }
 //end phan trang
+
+//buttun change status
+
+const listButtonChangeStatus=document.querySelectorAll("button[button-change-status]");
+if(listButtonChangeStatus.length>0) {
+    listButtonChangeStatus.forEach(button => {
+        button.addEventListener("click", () => {
+            const url=button.getAttribute("link");
+            // console.log(url);
+            fetch(url, {
+                method:"PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            }) 
+                .then(res => res.json()) 
+                .then(data => {
+                    if(data.code==200) {
+                        window.location.reload();
+                    }
+                 })
+        })
+    }) 
+}
+//end button change status
+
+
+// check box
+
+    // check nut tat ca
+    const checkboxAll=document.querySelector("input[name='checkboxAll']");
+ 
+    const listcheckboxItem=document.querySelectorAll("input[name='checkboxItem'");
+    if (checkboxAll) {
+        checkboxAll.addEventListener("click", () => {
+            listcheckboxItem.forEach(checkItem => {
+                checkItem.checked=checkboxAll.checked;
+            })
+        })
+    }
+    //end nut tat ca
+
+    // tich du 4 nut thi tich nut tat ca
+    listcheckboxItem.forEach(checkbox => {
+        checkbox.addEventListener("click", () =>{
+            const listcheck=document.querySelectorAll("input[name='checkboxItem']:checked");
+            if (listcheck.length==listcheckboxItem.length) {
+                checkboxAll.checked=true;
+            }           
+            else {
+                checkboxAll.checked=false;
+            }
+        })
+    });
+    //end
+
+//end checkbox

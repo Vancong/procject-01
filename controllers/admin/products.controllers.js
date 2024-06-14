@@ -20,9 +20,6 @@ module.exports.index= async (req, res) => {
       }
     ];
 
-
-
-
     // bo loc
     if(req.query.status){
       find.status=req.query.status;
@@ -42,7 +39,6 @@ module.exports.index= async (req, res) => {
 
     //phan trang
 
-    // const pagination= await paginationHelpers(req,find);
     const pagination = await paginationHelpers(req,find);
 
     //end phan trang  await Prodcut
@@ -55,6 +51,7 @@ module.exports.index= async (req, res) => {
 
     // console.log(products);
 
+
     res.render('admin/page/products/index.pug', {
       pageTitle: "Quan ly san pham",
       products: products,
@@ -64,4 +61,17 @@ module.exports.index= async (req, res) => {
     });
   };
 
-  
+   // thay doi trang thai
+   // gui len bang phuong thuc patch
+  module.exports.changeStatus= async (req,res) => {
+      const {id,statusChange}=req.params;
+      await Product.updateOne({
+        _id: id
+      },  {
+        status: statusChange
+      });
+      res.json( {
+        code:200     
+      });
+  }
+  // end thay doi trang thai
