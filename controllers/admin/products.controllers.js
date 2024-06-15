@@ -75,3 +75,10 @@ module.exports.index= async (req, res) => {
       });
   }
   // end thay doi trang thai
+  // router.patch('/change-multi/:statusChange/:id',productsControllers.changeMulti);
+  module.exports.changeMulti= async (req,res) => {
+    
+    res.json( {
+      code:200     
+    });
+}

@@ -91,7 +91,6 @@ if(listButtonChangeStatus.length>0) {
 
     // check nut tat ca
     const checkboxAll=document.querySelector("input[name='checkboxAll']");
- 
     const listcheckboxItem=document.querySelectorAll("input[name='checkboxItem'");
     if (checkboxAll) {
         checkboxAll.addEventListener("click", () => {
@@ -105,8 +104,8 @@ if(listButtonChangeStatus.length>0) {
     // tich du 4 nut thi tich nut tat ca
     listcheckboxItem.forEach(checkbox => {
         checkbox.addEventListener("click", () =>{
-            const listcheck=document.querySelectorAll("input[name='checkboxItem']:checked");
-            if (listcheck.length==listcheckboxItem.length) {
+            const listCheckChecked=document.querySelectorAll("input[name='checkboxItem']:checked");
+            if (listCheckChecked.length==listcheckboxItem.length) {
                 checkboxAll.checked=true;
             }           
             else {
@@ -117,3 +116,43 @@ if(listButtonChangeStatus.length>0) {
     //end
 
 //end checkbox
+
+// change status nhieu san pham
+const boxActions=document.querySelector("[box-actions]");
+if(boxActions) {
+    const button=boxActions.querySelector("button");
+    const select=boxActions.querySelector("select");
+   
+    button.addEventListener("click", () => {
+        const status=select.value;
+        const listCheckChecked=document.querySelectorAll("input[name='checkboxItem']:checked");
+        const idf=[];
+        listCheckChecked.forEach(input => {
+            idf.push(input.value);
+        });
+        if (idf.length>0 &&status!=""){
+            const dataChangeMulti={
+                status,
+                id:idf
+            }
+            fetch("/admin/product/change-multi", {
+                method:"PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(dataChangeMulti), 
+            })
+             .then(res=> res.json())
+             .then(data=>{
+                console.log(data);
+             })
+        }
+        
+        else {  
+            alert("vui long chon hanh dong va san pham");
+        }
+        
+       
+    })
+}
+//end change
