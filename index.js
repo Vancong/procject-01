@@ -1,4 +1,11 @@
 const express = require('express')  // nhung thu vien
+const bodyParser=require('body-parser');
+const app = express();
+const port =3000;
+
+// parse application/json
+app.use(bodyParser.json());
+
 require('dotenv').config();    // bao mat
 
 const database=require('./config/database.js');
@@ -8,8 +15,6 @@ database.connect();    // data
 const routeClient=require("./routes/client/index.route.js");  // nhung file route
 const routeAdmin=require("./routes/admin/index.route.js");
 
-const app = express();
-const port =3000;
 
 
 app.set('views', './views');   // dinh nghia thu muc view

@@ -76,8 +76,15 @@ module.exports.index= async (req, res) => {
   }
   // end thay doi trang thai
   // router.patch('/change-multi/:statusChange/:id',productsControllers.changeMulti);
-  module.exports.changeMulti= async (req,res) => {
-    
+  module.exports.changeMulti= async (req,res) => { 
+   
+    const {status,idf}=req.body;
+
+    await Product.updateMany({
+      _id: idf
+    },  {
+      status: status
+    });
     res.json( {
       code:200     
     });

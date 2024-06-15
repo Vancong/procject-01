@@ -133,7 +133,7 @@ if(boxActions) {
         if (idf.length>0 &&status!=""){
             const dataChangeMulti={
                 status,
-                id:idf
+                idf:idf
             }
             fetch("/admin/product/change-multi", {
                 method:"PATCH",
@@ -144,7 +144,9 @@ if(boxActions) {
             })
              .then(res=> res.json())
              .then(data=>{
-                console.log(data);
+                if(data.code==200) {
+                    window.location.reload();
+                }
              })
         }
         
