@@ -75,7 +75,7 @@ if(listButtonChangeStatus.length>0) {
                     "Content-Type": "application/json",
                 }
             }) 
-                .then(res => res.json()) 
+                .then(res => res.json())  // chuyen json ve js
                 .then(data => {
                     if(data.code==200) {
                         window.location.reload();
@@ -158,3 +158,81 @@ if(boxActions) {
     })
 }
 //end change
+
+
+//xoa 1 san pham
+const ListbuttonDelete=document.querySelectorAll("[button-delete]");
+// console.log(buttonDelete);
+if(ListbuttonDelete.length>0) {
+    ListbuttonDelete.forEach(button => {
+        button.addEventListener("click", () =>{
+            const id=button.getAttribute("button-delete");
+            console.log(id);
+            fetch(`/admin/product/delete/${id}`, {          
+                method: "PATCH"
+              })
+                .then(res => res.json())
+                .then(data => {
+                  if(data.code == 200) {
+                    window.location.reload();
+                  }
+                })
+            });
+        })
+    
+}
+
+//end xoa 1 san pham
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const listButtonBack=document.querySelectorAll("[button-back");
+if(listButtonBack.length>0) {
+    listButtonBack.forEach(button => {
+        button.addEventListener("click", () =>{
+            const id=button.getAttribute("button-back");
+            console.log(id);
+            fetch(`/admin/product/trash/back/${id}`,{
+                method:"PATCH",
+
+            })
+            .then(res=> res.json())
+            .then(data => {
+                if(data.code==200) {
+                    window.location.reload();
+                }
+            })
+        })
+    });
+}

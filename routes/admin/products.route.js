@@ -4,5 +4,11 @@ const productsControllers=require("../../controllers/admin/products.controllers.
 router.get('/',productsControllers.index);
 router.patch('/change-status/:statusChange/:id',productsControllers.changeStatus);
 router.patch('/change-multi',productsControllers.changeMulti);
+router.patch('/delete/:id',productsControllers.delete);
+
+
+
+router.get('/trash',productsControllers.trash);
+router.patch('/trash/back/:id',productsControllers.back);
 module.exports=router;
 

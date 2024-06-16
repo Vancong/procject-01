@@ -41,7 +41,6 @@ block main
             th STT
             th Hình ảnh
             th Tiêu đề
-            th Vị Trí
             th Giá
             th Trạng thái
             th Hành động
@@ -62,13 +61,6 @@ block main
                   alt=`Sản phẩm ${index+1}`
                   width="80px"
                   height="auto"
-                )
-              td 
-                input(type="number"
-                      style="width: 60px"
-                      min="1"
-                      value=item.position
-                      name="position"
                 )
               td #{item.title}
               td #{item.price}$
@@ -93,24 +85,3 @@ block main
                 ) Xóa
             tr
   +pagination(pagination)
-
-
-      //- tr 
-      //-   td 2
-      //-   td
-      //-     img(
-      //-       src="https://cdn.dummyjson.com/products/images/beauty/Eyeshadow%20Palette%20with%20Mirror/thumbnail.png"
-      //-       alt="Sản phẩm 2"
-      //-       width="80px"
-      //-       height="auto"
-      //-     )
-      //-   td Sản phẩm 2
-      //-   td 150$
-      //-   td
-      //-     a(href="#" class="badge badge-danger") Dừng hoạt động
-      //-   td
-      //-     button(class="btn btn-warning btn-sm") Sửa
-      //-     button(class="btn btn-danger btn-sm ml-1") Xóa
-
-
-
