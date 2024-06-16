@@ -86,12 +86,19 @@ module.exports.index= async (req, res) => {
               status: status
             });
         }
-        else {
+        else if(status=='delete') {
           await Product.updateMany({
             _id: idf
           },  {
             deleted:true
           });
+        }
+        else if(status=='back'){
+          await Product.updateMany({
+            _id: idf
+          },{
+            deleted: false
+          })
         }
     }
    
@@ -113,22 +120,6 @@ module.exports.index= async (req, res) => {
       });
   }
 
-//xoa nhieu sp
-// module.exports.deleteAll= async (req,res) => {
-//     const{id,hanhdong}=req.body;
-//     console.log(id);
-//     console.log(hanhdong);
-//     await Product.updateMany({
-//       _id:id
-//     },{
-//       deleted: true
-//     })
-//     res.json({
-//       code:200
-//     })
-// }
-
-//end xoa nhieu san pham
 
 
 
@@ -203,7 +194,7 @@ module.exports.index= async (req, res) => {
     });
   }
 
-
+  // khoi phuc san pham
   module.exports.back= async (req,res) => {
     const id=req.params.id;
     console.log(id);
@@ -216,3 +207,19 @@ module.exports.index= async (req, res) => {
         code:200
     });
 }
+// end khoi phuc
+
+//xoa vinh vien 1 san pham
+   
+  module.exports.deleteVv= async(req,res) =>{
+    const id=req.params.id;
+    await Product.deleteOne({
+      _id: id
+    }
+   )
+    res.json( {
+      code:200
+    })
+  }
+
+//end xoa vinh vien 1 san pham

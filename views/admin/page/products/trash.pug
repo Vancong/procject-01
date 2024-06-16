@@ -3,7 +3,7 @@ include ../../mixins/filter-status.pug
 include ../../mixins/search.pug
 include ../../mixins/pagination.pug
 block main
-  h1(class="mb-4") Quản lý sản phẩm
+  h1(class="mb-4") Thùng Rác
     .card.mb-3
     .card-header Bộ lọc và Tìm kiếm
     .card-body
@@ -18,8 +18,8 @@ block main
       div(class="input-group" box-actions)
         select(class="custom-select")
           option(value='') Chọn hành động...
-          option(value='active') Hoạt động
-          option(value='inactive') Dừng hoạt động
+          option(value='back') Khôi Phục
+          option(value='deleteAll') Xóa Vĩnh Viễn
         .input-group-append
           button(
             class="btn btn-outline-secondary"
@@ -82,8 +82,8 @@ block main
                        button-back=item.id
                 ) Khôi Phục
                 button(class="btn btn-danger btn-sm ml-1" 
-                       button-deleteVV=item.id
-                    
+                       button-deleteVv=item.id
+                        
                 ) Xóa Vĩnh Viễn
             tr
   +pagination(pagination)

@@ -125,6 +125,7 @@ if(boxActions) {
    
     button.addEventListener("click", () => {
         const status=select.value;
+        console.log(status);
         const listCheckChecked=document.querySelectorAll("input[name='checkboxItem']:checked");
         const idf=[];
         listCheckChecked.forEach(input => {
@@ -160,14 +161,14 @@ if(boxActions) {
 //end change
 
 
-//xoa 1 san pham
+//xoa 1 mem  san pham
 const ListbuttonDelete=document.querySelectorAll("[button-delete]");
 // console.log(buttonDelete);
 if(ListbuttonDelete.length>0) {
     ListbuttonDelete.forEach(button => {
         button.addEventListener("click", () =>{
             const id=button.getAttribute("button-delete");
-            console.log(id);
+            // console.log(id);
             fetch(`/admin/product/delete/${id}`, {          
                 method: "PATCH"
               })
@@ -182,28 +183,17 @@ if(ListbuttonDelete.length>0) {
     
 }
 
-//end xoa 1 san pham
+//end xoa mem 1 san pham
 
-// xoa nhieu san pham
-const boxActions2=document.querySelector("[box-actions]");
-const buttonAll=boxActions.querySelector("button");
-// console.log(buttonAll);
-buttonAll.addEventListener("click", () => {
-    const select=boxActions2.querySelector("select");
-    const hanhdong=select.value;
-    const listbuttonProduct=document.querySelector("input[name='checkboxItem']:checked");
-    const listId=[];
-    listbuttonProduct.forEach(id => {
-        listId.push(id.value)
-       
-    });
-    if(listId.length>0&&hanhdong!="") {
-        const dataDelete=[
-            listId,
-            hanhdong
-        ];
-        fetch("/admin/product/deleteAll", {          
-            method: "PATCH"
+
+ // xoa vinh vien
+const buttonDeleteVv=document.querySelectorAll("[button-deleteVv]");
+console.log(buttonDeleteVv);
+buttonDeleteVv.forEach(button => {
+    button.addEventListener("click", () => {
+        const id=button.getAttribute("button-deleteVv");
+        fetch(`/admin/product/trash/deleteVv/${id}`, {          
+            method: "DELETE"
           })
             .then(res => res.json())
             .then(data => {
@@ -211,14 +201,11 @@ buttonAll.addEventListener("click", () => {
                 window.location.reload();
               }
             })
-    }
-})
+        
+    })
+});
 
-
-//end xoa nhieu san pham
-
-
-
+//end xoa vinh vien
 
 
 
@@ -245,7 +232,7 @@ buttonAll.addEventListener("click", () => {
 
 
 
-
+// khoi phuc 1 san pham
 const listButtonBack=document.querySelectorAll("[button-back");
 if(listButtonBack.length>0) {
     listButtonBack.forEach(button => {
@@ -265,3 +252,5 @@ if(listButtonBack.length>0) {
         })
     });
 }
+
+// end khoi phuc 1 san pham
