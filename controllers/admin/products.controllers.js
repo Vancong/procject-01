@@ -78,16 +78,28 @@ module.exports.index= async (req, res) => {
   // router.patch('/change-multi/:statusChange/:id',productsControllers.changeMulti);
   module.exports.changeMulti= async (req,res) => {  
     const {status,idf}=req.body;
-
-    await Product.updateMany({
-      _id: idf
-    },  {
-      status: status
-    });
+    if(status){
+        if(status=='active'||status=='inactive'){
+            await Product.updateMany({
+              _id: idf
+            },  {
+              status: status
+            });
+        }
+        else {
+          await Product.updateMany({
+            _id: idf
+          },  {
+            deleted:true
+          });
+        }
+    }
+   
     res.json( {
       code:200     
     });
 }
+  //xoa 1 san pham
   module.exports.delete= async (req,res) => {
       const id=req.params.id;
       console.log(id);
@@ -101,6 +113,22 @@ module.exports.index= async (req, res) => {
       });
   }
 
+//xoa nhieu sp
+// module.exports.deleteAll= async (req,res) => {
+//     const{id,hanhdong}=req.body;
+//     console.log(id);
+//     console.log(hanhdong);
+//     await Product.updateMany({
+//       _id:id
+//     },{
+//       deleted: true
+//     })
+//     res.json({
+//       code:200
+//     })
+// }
+
+//end xoa nhieu san pham
 
 
 
@@ -112,6 +140,9 @@ module.exports.index= async (req, res) => {
 
 
 
+
+
+  
 
   module.exports.trash= async(req,res)=> {
     const find= {

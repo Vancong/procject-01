@@ -184,9 +184,38 @@ if(ListbuttonDelete.length>0) {
 
 //end xoa 1 san pham
 
+// xoa nhieu san pham
+const boxActions2=document.querySelector("[box-actions]");
+const buttonAll=boxActions.querySelector("button");
+// console.log(buttonAll);
+buttonAll.addEventListener("click", () => {
+    const select=boxActions2.querySelector("select");
+    const hanhdong=select.value;
+    const listbuttonProduct=document.querySelector("input[name='checkboxItem']:checked");
+    const listId=[];
+    listbuttonProduct.forEach(id => {
+        listId.push(id.value)
+       
+    });
+    if(listId.length>0&&hanhdong!="") {
+        const dataDelete=[
+            listId,
+            hanhdong
+        ];
+        fetch("/admin/product/deleteAll", {          
+            method: "PATCH"
+          })
+            .then(res => res.json())
+            .then(data => {
+              if(data.code == 200) {
+                window.location.reload();
+              }
+            })
+    }
+})
 
 
-
+//end xoa nhieu san pham
 
 
 
