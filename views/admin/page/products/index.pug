@@ -2,19 +2,24 @@ extends ../../layout/default.pug
 include ../../mixins/filter-status.pug
 include ../../mixins/search.pug
 include ../../mixins/pagination.pug
+
 block main
+
   h1(class="mb-4") Quản lý sản phẩm
     .card.mb-3
     .card-header Bộ lọc và Tìm kiếm
     .card-body
+      
       .row 
         .col-6
           +filter-status(filterStatus)
+      
         .col-6
           +search(keyword)
+    
   .card.mb-3
     .card-header Hành động
-    .card-body
+      .card-body
       div(class="input-group" box-actions)
         select(class="custom-select")
           option(value='') Chọn hành động...
@@ -30,6 +35,11 @@ block main
   .card.mb-3
     .card-header Danh sach
     .card-body
+      div(class="text-right mb-2")
+        a(
+          href=`${prefixAdmin}/product/create`
+          class="btn btn-outline-success"
+        ) + Thêm mới
       table.table.table-hover.table-sm
         thead
           tr
@@ -42,9 +52,10 @@ block main
             th STT
             th Hình ảnh
             th Tiêu đề
-            th Vị Trí
             th Giá
+            th Vị Trí
             th Trạng thái
+            th Chi tiết 
             th Hành động
 
         tbody
@@ -64,15 +75,17 @@ block main
                   width="80px"
                   height="auto"
                 )
+             
+              td #{item.title}
+              td #{item.price}$
               td 
                 input(type="number"
                       style="width: 60px"
                       min="1"
                       value=item.position
                       name="position"
+                      link=`${prefixAdmin}/product/changeposition/${item.id}`
                 )
-              td #{item.title}
-              td #{item.price}$
               td
                 if(item.status == 'active')
                   button(
@@ -86,15 +99,20 @@ block main
                     class="badge badge-danger"
                     button-change-status
                   ) Dừng hoạt động
+              td 
+                a(  href=`${prefixAdmin}/product/detail/${item.id}`)
+                  <i class="fa-solid fa-eye"></i> 
               td
-                button(class="btn btn-warning btn-sm") Sửa
+                a(href=`${prefixAdmin}/product/edit/${item.id}`
+                  class="btn btn-warning btn-sm"
+                )  Sửa
                 button(class="btn btn-danger btn-sm ml-1" 
-                       button-delete=item.id
-                    
+                       button-delete=item.id  
                 ) Xóa
             tr
   +pagination(pagination)
-
+ 
+  a(href=`${prefixAdmin}/product/trash`) <button type="button" class="btn btn-secondary">Thùng Rác</button> 
 
       //- tr 
       //-   td 2

@@ -1,4 +1,5 @@
 const Product=require('../../models/product.models.js');
+const sytem=require('../../config/sytem.js')
 const paginationHelpers=require('../../helpers/pagination.helpers.js')
 module.exports.index= async (req, res) => {
     const find= {
@@ -47,7 +48,10 @@ module.exports.index= async (req, res) => {
     const products= await Product
       .find(find)   // him tim kiem
       .limit(pagination.limitItem)     // gioi han bao nhieu ban ghi
-      .skip(pagination.skip);     // tim  tu trang bao nhieu
+      .skip(pagination.skip)    // tim  tu trang bao nhieu
+      .sort({
+        position: "desc"
+      });
 
     // console.log(products);
 
@@ -64,15 +68,21 @@ module.exports.index= async (req, res) => {
    // thay doi trang thai
    // gui len bang phuong thuc patch
   module.exports.changeStatus= async (req,res) => {
-      const {id,statusChange}=req.params;
-      await Product.updateOne({
-        _id: id
-      },  {
-        status: statusChange
+      try {
+        const {id,statusChange}=req.params;
+        await Product.updateOne({
+          _id: id
+        },  {
+          status: statusChange
       });
-      res.json( {
-        code:200     
-      });
+        req.flash('success', 'Cập nhật trạng thái thành công!');
+        res.json( {
+          code:200     
+       });
+        
+      } catch (error) {
+        res.redirect(`${sytem.path.prefixAdmin}/product`);
+      }
   }
   // end thay doi trang thai
   // router.patch('/change-multi/:statusChange/:id',productsControllers.changeMulti);
@@ -99,6 +109,12 @@ module.exports.index= async (req, res) => {
           },{
             deleted: false
           })
+          req.flash('success','Khôi phục thành công!')  
+        }
+        else if(status=='deleteAll'){
+          await Product.deleteMany({
+            _id:idf
+          })
         }
     }
    
@@ -106,22 +122,166 @@ module.exports.index= async (req, res) => {
       code:200     
     });
 }
-  //xoa 1 san pham
+  //xoa mem 1 san pham
   module.exports.delete= async (req,res) => {
-      const id=req.params.id;
-      console.log(id);
-      await Product.updateOne({
-        _id: id
-      },{
-        deleted: true
-      })
-      res.json( {  //chuyen js sang json
-          code:200
-      });
+      try {
+        const id=req.params.id;
+      // console.log(id);
+        await Product.updateOne({
+          _id: id
+        },{
+          deleted: true
+        })
+        req.flash('success','Xóa thành công 1 sản phẩm!')
+        res.json( {  //chuyen js sang json
+            code:200
+        });
+      } catch (error) {
+        res.redirect(`${sytem.path.prefixAdmin}/product`);
+      }
+
+      
   }
 
+// end xoa mem
+
+// thay doi vi tri sp
+
+module.exports.changePosition= async(req,res) =>{
+  const position=req.body.position;
+  const id=req.params.id;
+  // console.log(position);
+  // console.log(id);
+  
+  await Product.updateOne({
+    _id:id
+  },{
+    position: position
+  })
+  req.flash('success','Đổi vị trí thành công!')
+  res.json({
+    code: 200
+  })
+}
 
 
+//end thay doi vi tri
+
+// them moi san pham
+
+module.exports.create=  (req,res) => {
+  res.render('./admin/page/products/create.pug',{
+    pageTitle: "Thêm Sản Phẩm"
+  });
+}
+module.exports.createProduct= async (req,res) => {
+  if(req.file&&req.file.filename) {
+    req.body.thumbnail=`/uploads/${req.file.filename}`;
+  }
+  req.body.price=parseInt(req.body.price);
+  req.body.stock=parseInt(req.body.stock);
+  req.body.discountPercentage=parseInt(req.body.discountPercentage);
+  if(req.body.position) {
+    req.body.position=parseInt(req.body.position);
+  }
+  else {
+    const cout=await Product.countDocuments()+1;
+    req.body.position=cout;
+    // req.body.position=;
+  }
+  const newProduct=new Product(req.body);
+  await newProduct.save();
+  res.redirect(`${sytem.path.prefixAdmin}/product`);
+  
+  // console.log(req.body);
+ 
+}
+
+
+
+
+
+
+//end them moi san pham
+
+
+//edit sp
+module.exports.showEdit=async (req,res) => {
+  try {
+    const id=req.params.id;
+    const find={
+      _id: id,
+      deleted: false
+    }
+    const products= await Product.findOne(find);
+    if(products) {
+      res.render('admin/page/products/showEdit.pug',{
+        pageTitle: "Edit San pham",
+        product: products
+      });
+    }
+    else {
+      res.redirect(`${sytem.path.prefixAdmin}/product`);
+    }
+    
+  } catch (error) {
+    res.redirect(`${sytem.path.prefixAdmin}/product`);
+  }
+}
+
+module.exports.endEdit=async (req,res) =>{
+
+    try {
+      const id=req.params.id;
+      if(req.file&&req.file.filename) {
+        req.body.thumbnail=`/uploads/${req.file.filename}`;
+      }
+      req.body.price=parseInt(req.body.price);
+      req.body.stock=parseInt(req.body.stock);
+      req.body.discountPercentage=parseInt(req.body.discountPercentage);
+      if(req.body.position) {
+        req.body.position=parseInt(req.body.position);
+      }
+      else {
+        const cout=await Product.countDocuments()+1;
+        req.body.position=cout;
+        // req.body.position=;
+      }
+      await Product.updateOne({
+        _id:id,
+        deleted:false
+      },req.body);
+      req.flash('success','update thanh cong');
+      res.redirect(`${sytem.path.prefixAdmin}/product`);
+    } catch (error) {
+      res.redirect(`${sytem.path.prefixAdmin}/product`);
+    }
+
+}
+// end edit sp
+
+//chi tiet san pham
+module.exports.detail=async (req,res) =>{
+  try {
+     const id=req.params.id;
+     const product=await Product.findOne({
+        _id:id
+     });
+    if(product) {
+      res.render('admin/page/products/detail.pug',{
+        pageTitle: 'Chi tiết sản phẩm',
+        product: product
+      }) 
+    }
+    else {
+      res.redirect(`${sytem.path.prefixAdmin}/product`);
+    }
+  } catch (error) {
+    res.redirect(`${sytem.path.prefixAdmin}/product`);
+  }
+}
+
+//end detail
 
 
 
@@ -135,6 +295,17 @@ module.exports.index= async (req, res) => {
 
   
 
+
+
+
+
+
+
+
+
+
+
+  // thungrac
   module.exports.trash= async(req,res)=> {
     const find= {
       deleted: true
@@ -197,12 +368,13 @@ module.exports.index= async (req, res) => {
   // khoi phuc san pham
   module.exports.back= async (req,res) => {
     const id=req.params.id;
-    console.log(id);
+    // console.log(id);
     await Product.updateOne({
       _id: id
     },{
       deleted: false
     })
+    req.flash('success','Khôi phục thành công!')
     res.json( {  //chuyen js sang json
         code:200
     });

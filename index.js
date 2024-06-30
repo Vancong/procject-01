@@ -3,8 +3,25 @@ const bodyParser=require('body-parser');
 const app = express();
 const port =3000;
 
+//method
+const methodOverride = require('method-override');
+app.use(methodOverride('_method'));
+
+
+//falsh
+const flash = require('express-flash');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+app.use(cookieParser('HHKALKS'));
+app.use(session({ cookie: { maxAge: 60000 }}));
+app.use(flash());
+// End Flash
+
+
 // parse application/json
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
 
 require('dotenv').config();    // bao mat
 

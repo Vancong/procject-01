@@ -125,7 +125,7 @@ if(boxActions) {
    
     button.addEventListener("click", () => {
         const status=select.value;
-        console.log(status);
+        // console.log(status);
         const listCheckChecked=document.querySelectorAll("input[name='checkboxItem']:checked");
         const idf=[];
         listCheckChecked.forEach(input => {
@@ -173,11 +173,13 @@ if(ListbuttonDelete.length>0) {
                 method: "PATCH"
               })
                 .then(res => res.json())
-                .then(data => {
-                  if(data.code == 200) {
-                    window.location.reload();
-                  }
+                .then(data =>{
+                    if(data.code==200) {
+                        window.location.reload();
+                    }
                 })
+
+                
             });
         })
     
@@ -185,10 +187,120 @@ if(ListbuttonDelete.length>0) {
 
 //end xoa mem 1 san pham
 
+// thay doi vi tri 
+ const listInputPosition=document.querySelectorAll("input[name='position']");
+if(listInputPosition.length>0) {
+    listInputPosition.forEach(input => {
+        input.addEventListener("change",()=>{
+            const value=input.value;
+            const url=input.getAttribute("link");
+            const dataInput={
+                position:parseInt(value)
+            }
+            fetch(url,{
+                method:"PATCH",
+                headers:{
+                     "Content-Type": "application/json"
+                },
+                body:JSON.stringify(dataInput)
+            })
+                .then(res=>res.json())
+                .then(data =>{
+                    if(data.code=200) {
+                        window.location.reload();
+                    }
+                })
+        })
+    });
+}
 
- // xoa vinh vien
+
+// end thay doi vi tri
+
+//thong bao thay doi trang thai
+const showAlert=document.querySelector("[show-alert]");
+if(showAlert) {
+    let time=showAlert.getAttribute("[show-alert")||3000;
+    time=parseInt(time);
+    setTimeout(() => {
+        showAlert.classList.add("hidden");
+    }, time);
+}
+
+//end thong bao
+
+//preview
+
+const uploadImage=document.querySelector("[upload-image");
+if(uploadImage) {
+    const uploadInput=uploadImage.querySelector("[upload-image-input]");
+    const uploadImagePreview=uploadImage.querySelector("[upload-image-preview");
+    uploadInput.addEventListener("change",()=> {
+        const file=uploadInput.files[0];
+        console.log(file);
+        if(file) {
+            uploadImagePreview.src=URL.createObjectURL(file);
+        }
+    })
+}
+
+
+
+
+//end preview
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ // xoa 1sp vinh vien
 const buttonDeleteVv=document.querySelectorAll("[button-deleteVv]");
-console.log(buttonDeleteVv);
+// console.log(buttonDeleteVv); 
 buttonDeleteVv.forEach(button => {
     button.addEventListener("click", () => {
         const id=button.getAttribute("button-deleteVv");
@@ -205,30 +317,7 @@ buttonDeleteVv.forEach(button => {
     })
 });
 
-//end xoa vinh vien
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//end xoa vinh vien 1sp
 
 
 

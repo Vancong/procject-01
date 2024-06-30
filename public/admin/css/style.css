@@ -47,3 +47,21 @@
     border-bottom: 1px solid #515151;
   }
   /* End Sider */
+  .show-alert {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    z-index: 999;
+  }
+  .hidden {
+    display: none;
+  }
+  .image-preview{
+    width: 280px;
+    height: auto;
+    margin-top: 15px;
+    border: 1px solid salmon;
+  }
+  .fa-solid{
+      margin-left: 17px;
+  }
