@@ -1,7 +1,9 @@
 const express = require('express')  // nhung thu vien
 const bodyParser=require('body-parser');
 const app = express();
-const port =3000;
+
+require('dotenv').config();    // bao mat
+const port =process.env.PORT;
 
 //method
 const methodOverride = require('method-override');
@@ -23,7 +25,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
-require('dotenv').config();    // bao mat
 
 const database=require('./config/database.js');
 database.connect();    // data

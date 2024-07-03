@@ -33,6 +33,7 @@ if (listButton.length>0) {
         fromSearch.addEventListener("submit",(event) => {
             event.preventDefault(); // ham ngan chan load lai trang
             const keyword=event.target.elements.keyword.value; // lay gia tri cua keyword
+            console.log(keyword);
             if (keyword) {
                 url.searchParams.set("keyword",keyword);
             }

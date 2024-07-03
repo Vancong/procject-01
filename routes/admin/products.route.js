@@ -1,11 +1,13 @@
 const express=require("express");
 const router=express.Router();
 const multer=require('multer');
-const storageMulterHeplpers=require('../../helpers/storagemulter.helpers.js');
+
 const validatesProduct=require('../../validates/admin/product.validates.js')
+const uploadCloud=require('../../middlewares/admin/uploadCloud.js');
 
 
-const upload=multer({storage: storageMulterHeplpers.storage});
+
+const upload=multer();
 
 const productsControllers=require("../../controllers/admin/products.controllers.js");
 router.get('/',productsControllers.index);
@@ -18,6 +20,7 @@ router.patch('/changeposition/:id',productsControllers.changePosition); //thay d
 router.get('/edit/:id',productsControllers.showEdit); // trang sua sp
 router.patch('/endEdit/:id',
     upload.single('thumbnail'),
+    uploadCloud,
     validatesProduct.validates,
     productsControllers.endEdit);
 
@@ -32,6 +35,8 @@ router.get('/create',productsControllers.create);
 // router.post('/createProduct',productsControllers.createProduct);
 router.post('/createProduct',
     upload.single('thumbnail'),
+    uploadCloud
+    ,
     validatesProduct.validates,
     productsControllers.createProduct);
 //end
