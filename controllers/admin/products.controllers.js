@@ -43,15 +43,27 @@ module.exports.index= async (req, res) => {
     const pagination = await paginationHelpers(req,find);
 
     //end phan trang  await Prodcut
+
+    //sort
+    const sort_1={};
+    if(req.query.value&&req.query.key) {
+        sort_1[req.query.key]=`${req.query.value}`;
+        // console.log(sort_1);
+    }
+    else {
+      sort_1.position='desc'
+    }
+
+    //end sort
     
 
     const products= await Product
       .find(find)   // him tim kiem
       .limit(pagination.limitItem)     // gioi han bao nhieu ban ghi
       .skip(pagination.skip)    // tim  tu trang bao nhieu
-      .sort({
-        position: "desc"
-      });
+      .sort(
+          sort_1
+        );
 
     // console.log(products);
 

@@ -253,7 +253,48 @@ if(uploadImage) {
 
 
 
+//sort
+const boxSort=document.querySelector("[sort]");
+if(boxSort) {
+    const boxSelect=boxSort.querySelector("[sort-select]");
+    const url=new URL(window.location.href);
+    boxSelect.addEventListener("change", ()=>{
+        const ans=boxSelect.value.split('-');
+        const [key,value]=ans;
+        if(key&&value) {
+            url.searchParams.set("key",key);
+            url.searchParams.set("value",value);
+        }
+        else {
+            url.searchParams.delete("key",key);
+            url.searchParams.delete("value",value);
+        }
+        window.location.href=url.href;
+        
+    })
 
+    //them option macdinh
+    const value= url.searchParams.get("value");
+    const key= url.searchParams.get("key");
+    if(value&&key) {
+        const key_value=`${key}-${value}`;
+        const option1=boxSelect.querySelector(`[value="${key_value}"]`);
+        option1.setAttribute('selected',true);
+        // console.log(option1);
+    }
+    //clear
+const buttonClear=document.querySelector("[sort-clear");
+// console.log(buttonClear);
+if(buttonClear) {
+    buttonClear.addEventListener("click",()=>{
+        url.searchParams.delete("key",key);
+        url.searchParams.delete("value",value);
+        window.location.href=url.href;
+    })
+}
+}
+    //end clear
+//end sort
 
 
 
