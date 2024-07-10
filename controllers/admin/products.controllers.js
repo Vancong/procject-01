@@ -1,4 +1,6 @@
 const Product=require('../../models/product.models.js');
+const Productcategory=require('../../models/product-category.models.js')
+const createTree=require('../../helpers/create-tree.helpers.js')
 const sytem=require('../../config/sytem.js')
 const paginationHelpers=require('../../helpers/pagination.helpers.js')
 module.exports.index= async (req, res) => {
@@ -181,12 +183,18 @@ module.exports.changePosition= async(req,res) =>{
 
 // them moi san pham
 
-module.exports.create=  (req,res) => {
+module.exports.create= async (req,res) => {
+  const categories=await Productcategory.find({
+    deleted: false
+  })
+  const newCategories=createTree(categories); 
   res.render('./admin/page/products/create.pug',{
-    pageTitle: "Thêm Sản Phẩm"
+    pageTitle: "Thêm Sản Phẩm",
+    categories: newCategories
   });
 }
 module.exports.createProduct= async (req,res) => {
+  
   req.body.price=parseInt(req.body.price);
   req.body.stock=parseInt(req.body.stock);
   req.body.discountPercentage=parseInt(req.body.discountPercentage);
@@ -222,11 +230,17 @@ module.exports.showEdit=async (req,res) => {
       _id: id,
       deleted: false
     }
+    const categories=await Productcategory.find({
+      deleted: false
+    })
+    const newCategories=createTree(categories);
+
     const products= await Product.findOne(find);
     if(products) {
       res.render('admin/page/products/showEdit.pug',{
         pageTitle: "Edit San pham",
-        product: products
+        product: products,
+        categories: newCategories
       });
     }
     else {

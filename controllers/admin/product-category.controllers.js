@@ -41,17 +41,44 @@ module.exports.createPost=async(req,res)=>{
 }
 
 module.exports.edit=async (req,res) =>{
-    const id=req.params.id;
-    const categories=await Productcategory.find({
-        deleted: false
-    })
-    const newCategories=createTree(categories);
-    const category= await Productcategory.findOne({
-        _id:id
-    })
-    res.render('admin/page/product-category/edit.pug',{
-        pageTitle:'Chỉnh sửa danh mục sản phẩm',
-        category: category,
-        categories: newCategories
-    });
+    try {
+        const id=req.params.id;
+        const categories=await Productcategory.find({
+            deleted: false
+        })
+        const newCategories=createTree(categories);
+        const category= await Productcategory.findOne({
+            _id:id
+        })
+        if(category) {
+            res.render('admin/page/product-category/edit.pug',{
+                pageTitle:'Chỉnh sửa danh mục sản phẩm',
+                category: category,
+                categories: newCategories
+            });
+        }
+    } catch (error) {
+        res.redirect(`${sytem.path.prefixAdmin}/product-category`);
+    }
+}
+
+module.exports.editPatch=async(req,res) =>{
+    try {
+            // console.log(req.body);
+        const id=req.params.id;
+        // console.log(id);
+        if(req.body.position) {
+            req.body.position=parseInt(req.body.position);
+        }
+        await Productcategory.updateOne({
+            _id:id,
+            deleted:false
+        },
+            req.body
+        )
+        req.flash('success','cap nhat thanh cong');
+        res.redirect(`${sytem.path.prefixAdmin}/product-category`);
+    } catch (error) {
+        res.redirect(`${sytem.path.prefixAdmin}/product-category`);
+    }
 }

@@ -1,4 +1,5 @@
 extends ../../layout/default.pug
+include ../../mixins/select-tree.pug
 block main 
   h1(class="mb-4") #{pageTitle}
   form(
@@ -16,6 +17,16 @@ block main
         required
         value=product.title
       )
+    div(class="form-group")
+      label(for="product_category_id") Danh mục cha
+      select(
+        name="product_category_id"
+        class="form-control"
+        id="product_category_id"
+      )
+        option(value="") -- Chọn danh mục cha --
+        if(categories)
+          +select-tree(categories, 1, product.product_category_id)
     div(class="form-group")
       label(for="desc") Mô tả
       textarea(

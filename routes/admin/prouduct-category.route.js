@@ -16,4 +16,10 @@ router.post('/createPost',
     validatesProduct.validates,
     productCategory.createPost);
 router.get('/edit/:id',productCategory.edit);
+router.patch('/edit/:id',
+    upload.single('thumbnail'),
+    uploadCloud
+    ,
+    validatesProduct.validates,
+    productCategory.editPatch);
 module.exports=router;
