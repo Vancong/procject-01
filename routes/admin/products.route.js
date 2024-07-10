@@ -4,9 +4,6 @@ const multer=require('multer');
 
 const validatesProduct=require('../../validates/admin/product.validates.js')
 const uploadCloud=require('../../middlewares/admin/uploadCloud.js');
-
-
-
 const upload=multer();
 
 const productsControllers=require("../../controllers/admin/products.controllers.js");

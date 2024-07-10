@@ -1,7 +1,7 @@
 const express = require('express')  // nhung thu vien
 const bodyParser=require('body-parser');
 const app = express();
-
+const path = require('path');
 require('dotenv').config();    // bao mat
 const port =process.env.PORT;
 
@@ -9,6 +9,7 @@ const port =process.env.PORT;
 const methodOverride = require('method-override');
 app.use(methodOverride('_method'));
 
+app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
 
 //falsh
 const flash = require('express-flash');
