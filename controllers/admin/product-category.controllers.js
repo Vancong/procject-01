@@ -15,10 +15,8 @@ module.exports.create=async(req,res) =>{
     const categories=await Productcategory.find({
         deleted: false
     })
-    
-
     const newCategories=createTree(categories);
-    console.log(newCategories);
+    // console.log(newCategories);
     res.render("admin/page/product-category/create.pug",{
         pageTitle:"Thêm mới danh mục sản phẩm",
         categories: newCategories

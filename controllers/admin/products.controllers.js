@@ -82,6 +82,7 @@ module.exports.index= async (req, res) => {
    // thay doi trang thai
    // gui len bang phuong thuc patch
   module.exports.changeStatus= async (req,res) => {
+    if(res.locals.role.permissions.includes('products_create')) {
       try {
         const {id,statusChange}=req.params;
         await Product.updateOne({
@@ -97,47 +98,54 @@ module.exports.index= async (req, res) => {
       } catch (error) {
         res.redirect(`${sytem.path.prefixAdmin}/product`);
       }
+    }
   }
   // end thay doi trang thai
   // router.patch('/change-multi/:statusChange/:id',productsControllers.changeMulti);
-  module.exports.changeMulti= async (req,res) => {  
-    const {status,idf}=req.body;
-    if(status){
-        if(status=='active'||status=='inactive'){
+  module.exports.changeMulti= async (req,res) => {
+    if(res.locals.role.permissions.includes('products_create')) {
+      const {status,idf}=req.body;
+      if(status){
+          if(status=='active'||status=='inactive'){
+              await Product.updateMany({
+                _id: idf
+              },  {
+                status: status
+              });
+          }
+          else if(status=='delete') {
             await Product.updateMany({
               _id: idf
             },  {
-              status: status
+              deleted:true
             });
-        }
-        else if(status=='delete') {
-          await Product.updateMany({
-            _id: idf
-          },  {
-            deleted:true
-          });
-        }
-        else if(status=='back'){
-          await Product.updateMany({
-            _id: idf
-          },{
-            deleted: false
-          })
-          req.flash('success','Khôi phục thành công!')  
-        }
-        else if(status=='deleteAll'){
-          await Product.deleteMany({
-            _id:idf
-          })
-        }
+          }
+          else if(status=='back'){
+            await Product.updateMany({
+              _id: idf
+            },{
+              deleted: false
+            })
+            req.flash('success','Khôi phục thành công!')  
+          }
+          else if(status=='deleteAll'){
+            await Product.deleteMany({
+              _id:idf
+            })
+          }
+      }
+    
+      res.json( {
+        code:200     
+      });
     }
-   
-    res.json( {
-      code:200     
-    });
+    else {
+      res.send('403');
+    } 
 }
   //xoa mem 1 san pham
   module.exports.delete= async (req,res) => {
+    if(res.locals.role.permissions.includes('products_delete')) { 
       try {
         const id=req.params.id;
       // console.log(id);
@@ -153,8 +161,10 @@ module.exports.index= async (req, res) => {
       } catch (error) {
         res.redirect(`${sytem.path.prefixAdmin}/product`);
       }
-
-      
+    }
+    else {
+      res.send('403');
+    } 
   }
 
 // end xoa mem
@@ -162,20 +172,22 @@ module.exports.index= async (req, res) => {
 // thay doi vi tri sp
 
 module.exports.changePosition= async(req,res) =>{
-  const position=req.body.position;
-  const id=req.params.id;
-  // console.log(position);
-  // console.log(id);
-  
-  await Product.updateOne({
-    _id:id
-  },{
-    position: position
-  })
-  req.flash('success','Đổi vị trí thành công!')
-  res.json({
-    code: 200
-  })
+  if(res.locals.role.permissions.includes('products_create')) {
+    const position=req.body.position;
+    const id=req.params.id;
+    // console.log(position);
+    // console.log(id);
+    
+    await Product.updateOne({
+      _id:id
+    },{
+      position: position
+    })
+    req.flash('success','Đổi vị trí thành công!')
+    res.json({
+      code: 200
+    })
+  }
 }
 
 
@@ -190,27 +202,32 @@ module.exports.create= async (req,res) => {
   const newCategories=createTree(categories); 
   res.render('./admin/page/products/create.pug',{
     pageTitle: "Thêm Sản Phẩm",
+    
     categories: newCategories
   });
 }
 module.exports.createProduct= async (req,res) => {
-  
-  req.body.price=parseInt(req.body.price);
-  req.body.stock=parseInt(req.body.stock);
-  req.body.discountPercentage=parseInt(req.body.discountPercentage);
-  if(req.body.position) {
-    req.body.position=parseInt(req.body.position);
+  if(res.locals.role.permissions.includes('products_create')){
+      req.body.price=parseInt(req.body.price);
+      req.body.stock=parseInt(req.body.stock);
+      req.body.discountPercentage=parseInt(req.body.discountPercentage);
+      if(req.body.position) {
+        req.body.position=parseInt(req.body.position);
+      }
+      else {
+        const cout=await Product.countDocuments()+1;
+        req.body.position=cout;
+        // req.body.position=;
+      }
+      const newProduct=new Product(req.body);
+      await newProduct.save();
+      res.redirect(`${sytem.path.prefixAdmin}/product`);   
+    // console.log(req.body);
   }
   else {
-    const cout=await Product.countDocuments()+1;
-    req.body.position=cout;
-    // req.body.position=;
+    res.send('403')
   }
-  const newProduct=new Product(req.body);
-  await newProduct.save();
-  res.redirect(`${sytem.path.prefixAdmin}/product`);
-  
-  // console.log(req.body);
+ 
  
 }
 
@@ -253,32 +270,38 @@ module.exports.showEdit=async (req,res) => {
 }
 
 module.exports.endEdit=async (req,res) =>{
-
-    try {
-      const id=req.params.id;
+    if((res.locals.role.permissions.includes('products_create'))){
+      try {
+        const id=req.params.id;
+          req.body.price=parseInt(req.body.price);
+          req.body.stock=parseInt(req.body.stock);
+          req.body.discountPercentage=parseInt(req.body.discountPercentage);
+          if(req.body.position) {
+            req.body.position=parseInt(req.body.position);
+          }
+          else {
+            const cout=await Product.countDocuments()+1;
+            req.body.position=cout;
+            // req.body.position=;
+          }
+          await Product.updateOne({
+            _id:id,
+            deleted:false
+          },req.body);
+          req.flash('success','update thanh cong');
+          res.redirect(`${sytem.path.prefixAdmin}/product`);
+        
       
-      req.body.price=parseInt(req.body.price);
-      req.body.stock=parseInt(req.body.stock);
-      req.body.discountPercentage=parseInt(req.body.discountPercentage);
-      if(req.body.position) {
-        req.body.position=parseInt(req.body.position);
+        
+      } catch (error) {
+        res.redirect(`${sytem.path.prefixAdmin}/product`);
       }
-      else {
-        const cout=await Product.countDocuments()+1;
-        req.body.position=cout;
-        // req.body.position=;
-      }
-      await Product.updateOne({
-        _id:id,
-        deleted:false
-      },req.body);
-      req.flash('success','update thanh cong');
-      res.redirect(`${sytem.path.prefixAdmin}/product`);
-    } catch (error) {
-      res.redirect(`${sytem.path.prefixAdmin}/product`);
-    }
-
+   }
+   else {
+      res.send('403');
+   }
 }
+
 // end edit sp
 
 //chi tiet san pham

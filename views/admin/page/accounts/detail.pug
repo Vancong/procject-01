@@ -1,0 +1,29 @@
+extends ../../layout/default.pug
+block main
+  if (account.fullName)
+    h1(class="mb-4") Full Name: #{account.fullName}
+
+  if (account.email)
+    div(class="mb-4") Eamil: #{account.email}
+
+  if (account.password)
+    div(class="mb-4") Password: #{account.password}
+
+  if (account.phone)
+    div(class="mb-4") Phone: #{account.phone}
+
+  if (account.avatar)
+    div(class="mb-4")
+      img(
+        src=account.avatar
+        style="width: 100px"
+      )
+
+  if (account.status)
+    div(class="mb-4")
+      span Trạng thái:
+      if (account.status === "active")
+        span(class="badge badge-success") Hoạt động
+      else
+        span(class="badge badge-danger") Dừng hoạt động
+

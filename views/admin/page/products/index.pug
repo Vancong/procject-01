@@ -4,154 +4,158 @@ include ../../mixins/search.pug
 include ../../mixins/pagination.pug
 
 block main
-
-  h1(class="mb-4") Quản lý sản phẩm
-    .card.mb-3
-    .card-header Bộ lọc và Tìm kiếm
-    .card-body
-      
-      .row 
-        .col-6
-          +filter-status(filterStatus)
-      
-        .col-6
-          +search(keyword)
-    
-  .card.mb-3
-    .card-header Hành động
+  if(user.permissions.includes('products_view'))
+    h1(class="mb-4") Quản lý sản phẩm
+      .card.mb-3
+      .card-header Bộ lọc và Tìm kiếm
       .card-body
-      div(class="input-group" box-actions)
-        select(class="custom-select")
-          option(value='') Chọn hành động...
-          option(value='active') Hoạt động
-          option(value='inactive') Dừng hoạt động
-          option(value='delete') Xóa
-        .input-group-append
-          button(
-            class="btn btn-outline-secondary"
-            type='button'
-          ) Áp dụng
-  .card.mb-3
-    .card-header Sắp xếp
-    .card-body
-      .row
-        .col-5
-          div(sort)
-            select(
-              class="form-control"
-              name="sort"
-              sort-select
-            )
-              option(value="position-desc" ) Vị trí giảm dần
-              option(value="position-asc") Vị trí tăng dần
-              option(value="price-desc") Giá giảm dần
-              option(value="price-asc") Giá tăng dần
-              option(value="title-asc") Tiêu đề A - Z
-              option(value="title-desc") Tiêu đề Z - A
-
-            button(
-              class="btn btn-danger mt-2"
-              sort-clear
-            ) Clear
-
-  .card.mb-3
-    .card-header Danh sach
-    .card-body
-      div(class="text-right mb-2")
-        a(
-          href=`${prefixAdmin}/product/create`
-          class="btn btn-outline-success"
-        ) + Thêm mới
-      table.table.table-hover.table-sm
-        thead
-          tr
-            th 
-              input(
-                type="checkbox"
-                name="checkboxAll"
-                
+        
+        .row 
+          .col-6
+            +filter-status(filterStatus)
+        
+          .col-6
+            +search(keyword)
+    if(user.permissions.includes('products_edit')) 
+      .card.mb-3
+        .card-header Hành động
+          .card-body
+          div(class="input-group" box-actions)
+            select(class="custom-select")
+              option(value='') Chọn hành động...
+              option(value='active') Hoạt động
+              option(value='inactive') Dừng hoạt động
+              option(value='delete') Xóa
+            .input-group-append
+              button(
+                class="btn btn-outline-secondary"
+                type='button'
+              ) Áp dụng
+    .card.mb-3
+      .card-header Sắp xếp
+      .card-body
+        .row
+          .col-5
+            div(sort)
+              select(
+                class="form-control"
+                name="sort"
+                sort-select
               )
-            th STT
-            th Hình ảnh
-            th Tiêu đề
-            th Giá
-            th Vị Trí
-            th Trạng thái
-            th Chi tiết 
-            th Hành động
+                option(value="position-desc" ) Vị trí giảm dần
+                option(value="position-asc") Vị trí tăng dần
+                option(value="price-desc") Giá giảm dần
+                option(value="price-asc") Giá tăng dần
+                option(value="title-asc") Tiêu đề A - Z
+                option(value="title-desc") Tiêu đề Z - A
 
-        tbody
-          each item,index in products
-            tr 
-              td
+              button(
+                class="btn btn-danger mt-2"
+                sort-clear
+              ) Clear
+
+    .card.mb-3
+      .card-header Danh sach
+      .card-body
+        if(user.permissions.includes('products_create'))
+          div(class="text-right mb-2")
+            a(
+              href=`${prefixAdmin}/product/create`
+              class="btn btn-outline-success"
+            ) + Thêm mới
+        table.table.table-hover.table-sm
+          thead
+            tr
+              th 
                 input(
                   type="checkbox"
-                  name="checkboxItem"
-                  value=item.id
+                  name="checkboxAll"
+                  
                 )
-              td #{index+1}
-              td
-                img(
-                  src=item.thumbnail
-                  alt=`Sản phẩm ${index+1}`
-                  width="80px"
-                  height="auto"
-                )
-             
-              td #{item.title}
-              td #{item.price}$
-              td 
-                input(type="number"
-                      style="width: 60px"
-                      min="1"
-                      value=item.position
-                      name="position"
-                      link=`${prefixAdmin}/product/changeposition/${item.id}`
-                )
-              td
-                if(item.status == 'active')
-                  button(
-                    link=`${prefixAdmin}/product/change-status/inactive/${item.id}`
-                    class="badge badge-success"
-                    button-change-status
-                  ) Hoạt động
-                else 
-                  button( 
-                    link=`${prefixAdmin}/product/change-status/active/${item.id}`
-                    class="badge badge-danger"
-                    button-change-status
-                  ) Dừng hoạt động
-              td 
-                a(  href=`${prefixAdmin}/product/detail/${item.id}`)
-                  <i class="fa-solid fa-eye"></i> 
-              td
-                a(href=`${prefixAdmin}/product/edit/${item.id}`
-                  class="btn btn-warning btn-sm"
-                )  Sửa
-                button(class="btn btn-danger btn-sm ml-1" 
-                       button-delete=item.id  
-                ) Xóa
-            tr
-  +pagination(pagination)
- 
-  a(href=`${prefixAdmin}/product/trash`) <button type="button" class="btn btn-secondary">Thùng Rác</button> 
+              th STT
+              th Hình ảnh
+              th Tiêu đề
+              th Giá
+              if(user.permissions.includes('products_edit'))
+               th Vị Trí
+               th Trạng thái      
+              th Hành động
+      
 
-      //- tr 
-      //-   td 2
-      //-   td
-      //-     img(
-      //-       src="https://cdn.dummyjson.com/products/images/beauty/Eyeshadow%20Palette%20with%20Mirror/thumbnail.png"
-      //-       alt="Sản phẩm 2"
-      //-       width="80px"
-      //-       height="auto"
-      //-     )
-      //-   td Sản phẩm 2
-      //-   td 150$
-      //-   td
-      //-     a(href="#" class="badge badge-danger") Dừng hoạt động
-      //-   td
-      //-     button(class="btn btn-warning btn-sm") Sửa
-      //-     button(class="btn btn-danger btn-sm ml-1") Xóa
+          tbody
+            each item,index in products
+              tr 
+                td
+                  input(
+                    type="checkbox"
+                    name="checkboxItem"
+                    value=item.id
+                  )
+                td #{index+1}
+                td
+                  img(
+                    src=item.thumbnail
+                    alt=`Sản phẩm ${index+1}`
+                    width="80px"
+                    height="auto"
+                  )          
+                td #{item.title}
+                td #{item.price}$
+                if(user.permissions.includes('products_edit'))
+                  td 
+                    input(type="number"
+                          style="width: 60px"
+                          min="1"
+                          value=item.position
+                          name="position"
+                          link=`${prefixAdmin}/product/changeposition/${item.id}`
+                    )
+                  td
+                    if(item.status == 'active')
+                      button(
+                        link=`${prefixAdmin}/product/change-status/inactive/${item.id}`
+                        class="badge badge-success"
+                        button-change-status
+                      ) Hoạt động
+                    else 
+                      button( 
+                        link=`${prefixAdmin}/product/change-status/active/${item.id}`
+                        class="badge badge-danger"
+                        button-change-status
+                      ) Dừng hoạt động             
+                td
+                  a(class="btn btn-info btn-sm" 
+                    href=`${prefixAdmin}/product/detail/${item.id}`
+                  ) Chi tiết                 
+                  if(user.permissions.includes('products_edit'))
+                    a(href=`${prefixAdmin}/product/edit/${item.id}`
+                      class="btn btn-warning btn-sm"
+                    )  Sửa
+                  if(user.permissions.includes('products_delete'))
+                    button(class="btn btn-danger btn-sm ml-1" 
+                          button-delete=item.id  
+                    ) Xóa          
+              tr
+    +pagination(pagination)
+  
+    a(href=`${prefixAdmin}/product/trash`) <button type="button" class="btn btn-secondary">Thùng Rác</button> 
+
+        //- tr 
+        //-   td 2
+        //-   td
+        //-     img(
+        //-       src="https://cdn.dummyjson.com/products/images/beauty/Eyeshadow%20Palette%20with%20Mirror/thumbnail.png"
+        //-       alt="Sản phẩm 2"
+        //-       width="80px"
+        //-       height="auto"
+        //-     )
+        //-   td Sản phẩm 2
+        //-   td 150$
+        //-   td
+        //-     a(href="#" class="badge badge-danger") Dừng hoạt động
+        //-   td
+        //-     button(class="btn btn-warning btn-sm") Sửa
+        //-     button(class="btn btn-danger btn-sm ml-1") Xóa
 
 
 

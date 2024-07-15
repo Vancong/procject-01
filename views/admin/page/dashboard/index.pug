@@ -1,3 +1,8 @@
 extends ../../layout/default.pug
 block main 
     h1 Trang tong quan
+    h3 Name: #{account.fullName}
+    h2 Quyền: #{account.permissions}
+    p Email: #{account.email}
+    img(src=account.avatar, alt="" width="200px")
+    p #{staus}

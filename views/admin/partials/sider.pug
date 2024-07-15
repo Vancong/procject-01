@@ -3,9 +3,20 @@
     ul 
       li
         a(href=`${prefixAdmin}/dashboard`) Tổng quan
-      li
-        a(href=`${prefixAdmin}/product`) Sản phẩm
-      li 
-         a(href=`${prefixAdmin}/product-category`) Danh mục sản phẩm
+      if(user.permissions.includes('products_view'))
+        li
+          a(href=`${prefixAdmin}/product`) Sản phẩm
+      if(user.permissions.includes('products-category_view'))
+        li 
+          a(href=`${prefixAdmin}/product-category`) Danh mục sản phẩm
+      if(user.permissions.includes('role_view'))
+        li
+          a(href=`${prefixAdmin}/role`) Nhóm quyền
+      if(user.permissions.includes('per'))
+        li
+          a(href=`${prefixAdmin}/role/permissions`) Phân quyền
+      if(user.permissions.includes('accadmin_view'))
+        li
+          a(href=`${prefixAdmin}/accounts`) Tài khoản Admin
       li
         a(href=`${prefixAdmin}/product/trash`) Thùng Rác

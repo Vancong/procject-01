@@ -1,3 +1,5 @@
+
+
 // button status
 const listButton=document.querySelectorAll("[button-status");
 if (listButton.length>0) {
@@ -297,12 +299,167 @@ if(buttonClear) {
 //end sort
 
 
+//deleted role
+
+const btDeletedRole=document.querySelectorAll('[bt-deleted-role]');
+if(btDeletedRole) {
+    btDeletedRole.forEach(button => {
+        button.addEventListener("click",()=>{
+            const link=button.getAttribute('link');
+            // console.log(link);
+            fetch(link,{
+                method:"PATCH"
+                
+            })
+            .then(res=> res.json())
+            .then(data=>{
+                if(data.code==200){
+                    window.location.reload();
+                }
+            })
+        })
+    });
+}
+
+//end deleted role
+
+//phan quyen
+
+const buttonUpdate=document.querySelector('[button-submit]');
+
+if(buttonUpdate) {
+    buttonUpdate.addEventListener("click",()=>{
+        const table=document.querySelector('[table-permissions]');
+        const roles=[];
+        const listTh=table.querySelectorAll('[role-id]');
+        listTh.forEach(element => {
+            const roleId=element.getAttribute('role-id');
+            const role={
+                id:roleId,
+                permissions:[]
+            };
+            const listInputChecked=table.querySelectorAll(`input[data-id="${roleId}"]:checked`);
+            listInputChecked.forEach(element => {
+                const dataName=element.getAttribute('data-name');
+                 role.permissions.push(dataName);
+            });
+           
+            roles.push(role);
+        });
+       const url=buttonUpdate.getAttribute('button-submit');
+       fetch(url,{
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(roles)
+       })
+       .then(res=>res.json())
+       .then(data=>{
+            if(data.code==200){
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: data.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                  });
+            }
+       })
+       
+    })
+}
+
+//end phan quyen
 
 
+//accounts
+
+    //change status
+const listStatusAcc=document.querySelectorAll('[data-status]');
+if(listStatusAcc){
+    listStatusAcc.forEach(button => {
+        button.addEventListener("click",()=>{
+            const url=button.getAttribute('link');
+            fetch(url,{
+                method: "PATCH"
+            })
+            .then(res=>res.json())
+            .then(data=>{
+                if(data.code==200){
+                    window.location.reload();
+                }
+            })
+        })
+    });
+}
+    //end change status
+
+const listBtDltAcc=document.querySelectorAll('[button-deleteAcc');
+if(listBtDltAcc){
+    listBtDltAcc.forEach(button => {
+        button.addEventListener("click",()=>{
+            const url=button.getAttribute('link');
+            fetch(url,{
+                method:"PATCH"
+            })
+            .then(res => res.json()) 
+            .then(data =>{
+                if(data.code==200) {
+                    window.location.reload();
+                }
+            })
+        })
+    });
+}
+
+    //back khoi phuc
+const listButonBackAcc=document.querySelectorAll('[back-acc');
+if(listButonBackAcc) {
+    listButonBackAcc.forEach(button => {
+        button.addEventListener("click",()=>{
+            const url=button.getAttribute('link');
+            console.log(url);
+            fetch(url,{
+                method:"PATCH"
+            })
+            .then(res =>res.json())
+            .then(data=>{
+                if(data.code==200) {
+                    window.location.reload();
+                }
+            })
+        })
+    });
+}
+
+    //end
+
+    //deleted vinh vien
+const ListbuttonDeleteVv=document.querySelectorAll('[deleted-vv]');
+if(ListbuttonDeleteVv){
+   ListbuttonDeleteVv.forEach(button => {
+     button.addEventListener("click",()=>{
+         const url=button.getAttribute('link');
+         fetch(url,{
+            method:"PATCH"
+         })
+         .then(res=>res.json())
+         .then(data=>{
+            if(data.code==200){
+                window.location.reload();
+            }
+         })
+     })
+   });
+}
+    //end deleted vv
+
+    //logout
 
 
-
-
+    //endlogout
+//end accounts
 
 
 
