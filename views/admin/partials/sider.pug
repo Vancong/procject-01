@@ -12,7 +12,7 @@
       if(user.permissions.includes('role_view'))
         li
           a(href=`${prefixAdmin}/role`) Nhóm quyền
-      if(user.permissions.includes('per'))
+      if(user.permissions.includes('role_per'))
         li
           a(href=`${prefixAdmin}/role/permissions`) Phân quyền
       if(user.permissions.includes('accadmin_view'))

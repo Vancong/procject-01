@@ -4,8 +4,14 @@ header.header
       .col-3
         .inner-logo
           a(href="/admin/dashboard") ADMIN
-      .inner-logo
-        a(href=`${prefixAdmin}/authen/logout`
-          class="logout"
-        ) Đăng xuất    
+      .inner-logo 
       .col-9
+        div(class="col-9 text-right mr")
+          a(
+            href=`${prefixAdmin}/profile`
+            class="btn btn-info btn-sm"
+          ) #{account.fullName}
+          a(
+            href=`${prefixAdmin}/authen/logout`
+            class="btn btn-danger btn-sm ml-2"
+          ) Đăng xuất

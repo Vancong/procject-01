@@ -47,7 +47,6 @@ router.post('/createProduct',
 
 
 
-
 router.get('/trash',productsControllers.trash);
 router.patch('/trash/back/:id',productsControllers.back); // khoi phuc 1 san pham
 

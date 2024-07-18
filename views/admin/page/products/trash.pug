@@ -48,6 +48,7 @@ block main
             th Tiêu đề
             th Giá
             th Trạng thái
+            th Người xóa
             th Hành động
 
         tbody
@@ -82,6 +83,10 @@ block main
                     class="badge badge-danger"
                     button-change-status
                   ) Dừng hoạt động
+              td 
+                if(item.nameDelete) 
+                  span #{item.nameDelete} 
+                  p #{item.deleteAt}
               td
                 button(class="btn btn-warning btn-sm"
                        button-back=item.id

@@ -30,5 +30,17 @@ block main
   if (product.position)
     div(class="mb-4") Vị trí: <b>#{product.position}</b>
 
+  if(product.createByFullName) 
+    div(class="mb-4") 
+     b Được tạo bởi :
+     p <b>#{product.permissionsCreate}: </b> #{product.createByFullName}
+     p Thời gian: #{product.createAtForMat}
+  
+  if(product.updateByFullName) 
+    div(class="mb-4") 
+      b Cập nhật bởi :
+      p <b>#{product.permissionsUpdate}: </b> #{product.updateByFullName}
+      p Thời gian: #{product.updateAtForMat}
+
   if (product.description)
     div(class="mb-4") !{product.description}

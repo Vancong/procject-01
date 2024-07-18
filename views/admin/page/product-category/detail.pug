@@ -1,0 +1,25 @@
+extends ../../layout/default.pug
+block main 
+  if (productCategory.title)
+    h1(class="mb-4") #{productCategory.title}
+
+  if (productCategory.position)
+    div(class="mb-4") Vi tri: <b>#{productCategory.position}</b>
+
+  if (productCategory.thumbnail)
+    div(class="mb-4")
+      img(
+        src=productCategory.thumbnail
+        style="width: 100px"
+      )
+
+  if (productCategory.status)
+    div(class="mb-4")
+      span Trạng thái:
+      if (productCategory.status =="active")
+        span(class="badge badge-success") Hoạt động
+      else
+        span(class="badge badge-danger") Dừng hoạt động
+
+  if (productCategory.description)
+    div(class="mb-4") !{productCategory.description}

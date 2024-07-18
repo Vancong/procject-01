@@ -13,8 +13,8 @@ module.exports= async(req,res,next)=>{
    });
    if(!account) {
        res.redirect(`${sytem.path.prefixAdmin}/authen/login`);
+       return;
    }
-   else {
      const role=await roleDtb.findOne({
           _id:account.role_id,
           deleted:false
@@ -22,8 +22,6 @@ module.exports= async(req,res,next)=>{
      account.permissions=role.title; // lay ten quyen
      res.locals.account=account; 
      res.locals.user=role; //phan quyen
-     
-      next();
-   }
-  
+     next();
+
 }

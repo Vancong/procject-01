@@ -22,4 +22,7 @@ router.patch('/edit/:id',
     ,
     validatesProduct.validates,
     productCategory.editPatch);
+router.patch('/changestatus/:status/:id',productCategory.changeStatus);
+router.get('/detail/:id',productCategory.detail);
+
 module.exports=router;

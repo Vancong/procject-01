@@ -19,29 +19,39 @@ module.exports.create=async(req,res)=>{
 
 // [POST] /admin/role/createPost
 module.exports.createPost=async(req,res)=>{
-    const newRole= new roleDatabase(req.body);
-    await newRole.save();
-    req.flash('success','cap nhat thanh cong');
-    res.redirect(`${sytem.path.prefixAdmin}/role`);
-    
+    if(res.locals.user.permissions.includes('accadmin_create')){
+        const newRole= new roleDatabase(req.body);
+        await newRole.save();
+        req.flash('success','cap nhat thanh cong');
+        res.redirect(`${sytem.path.prefixAdmin}/role`);
+    }
+    else {
+        res.send('403');
+    }  
 }
 
 // [PATCH] /admin/role/deleted xoa mem
 module.exports.deleted=async(req,res) =>{
-    try {
-        const id=req.params.id;
-        await roleDatabase.updateOne({
-            _id:id
-        },{
-            deleted:true
-        })
-        req.flash('success','xoa thanh cong ');
-        res.json({
-            code:200
-        })
-    } catch (error) {
-        res.redirect(`${sytem.path.prefixAdmin}/role`);
+    if(res.locals.user.permissions.includes('accadmin_delete')){
+        try {
+            const id=req.params.id;
+            await roleDatabase.updateOne({
+                _id:id
+            },{
+                deleted:true
+            })
+            req.flash('success','xoa thanh cong ');
+            res.json({
+                code:200
+            })
+        } catch (error) {
+            res.redirect(`${sytem.path.prefixAdmin}/role`);
+        }
     }
+    else {
+        res.send('403');
+    }
+ 
 }
 
 // [GET] /admin/role/edit/:id giao dien
@@ -64,19 +74,25 @@ module.exports.edit=async(req,res)=>{
 
 // [PATCH] /admin/role/edit/:id cap nhat dtb
 module.exports.editPatch=async(req,res) =>{
-    try {
-        const id=req.params.id;
-        await roleDatabase.updateOne({
-            _id:id,
-            deleted:false
-        },
-            req.body
-        )
-        req.flash('success','cap nhat thanh cong');
-        res.redirect(`${sytem.path.prefixAdmin}/role`);
-    } catch (error) {
-        res.redirect(`${sytem.path.prefixAdmin}/role`);
+    if(res.locals.user.permissions.includes('accadmin_edit')){
+        try {
+            const id=req.params.id;
+            await roleDatabase.updateOne({
+                _id:id,
+                deleted:false
+            },
+                req.body
+            )
+            req.flash('success','cap nhat thanh cong');
+            res.redirect(`${sytem.path.prefixAdmin}/role`);
+        } catch (error) {
+            res.redirect(`${sytem.path.prefixAdmin}/role`);
+        }
     }
+    else {
+        res.send('403');
+    }
+   
 }
 
 
@@ -95,18 +111,22 @@ module.exports.permissions=async(req,res)=>{
 
 // [PATCH] /admin/role/permission/
 module.exports.permissionsPatch=async(req,res)=>{
-    const roles=req.body;
-
-    for (const element of roles) {
-        await roleDatabase.updateOne({
-            _id: element.id,
-            deleted:false
-        },{
-            permissions: element.permissions
-        } )
-    } 
-    res.json({
-        code:200,
-        message: 'Cập nhật thành công'
-    })
+    if(res.locals.user.permissions.includes('role_per')){
+        const roles=req.body;
+        for (const element of roles) {
+            await roleDatabase.updateOne({
+                _id: element.id,
+                deleted:false
+            },{
+                permissions: element.permissions
+            } )
+        } 
+        res.json({
+            code:200,
+            message: 'Cập nhật thành công'
+        })
+    }
+    else {
+        res.send('403');
+    }
 }

@@ -28,6 +28,7 @@ module.exports.index=async(req,res) =>{
 
 // [GET] /admin/accounts/create
 module.exports.create=async(req,res)=>{
+
     const role=await roleDatabase.find({
         deleted:false
     }).select('title');
@@ -39,13 +40,17 @@ module.exports.create=async(req,res)=>{
 
 // [POST] /admin/accounts/create
 module.exports.createPost=async(req,res)=>{
-    req.body.token=generate.generateRandomString(30);
-    req.body.password=md5(req.body.password);
-    const newAccount= new accountsDatabase(req.body);
-    await newAccount.save();
-    req.flash('success','Tạo tài khoản thành công');
-    res.redirect(`${sytem.path.prefixAdmin}/accounts`);
-
+    if(res.locals.user.permissions.includes('accadmin_create')) {
+        req.body.token=generate.generateRandomString(30);
+        req.body.password=md5(req.body.password);
+        const newAccount= new accountsDatabase(req.body);
+        await newAccount.save();
+        req.flash('success','Tạo tài khoản thành công');
+        res.redirect(`${sytem.path.prefixAdmin}/accounts`);
+    }
+    else {
+        res.send('403');
+    }
 }
 
 // [GET] /admin/accounts/:edit
@@ -74,39 +79,50 @@ module.exports.edit=async(req,res) =>{
 
 // [PATCH] /admin/accounts/:edit
 module.exports.editPatch=async(req,res)=>{
-    try {
-        const id=req.params.id;
-        const account=await accountsDatabase.findOne({
-            _id:id,
-            deleted:false
-        });
-        if(req.body.password) {
-             req.body.password=md5(req.body.password);
+    if(res.locals.user.permissions.includes('accadmin_edit')) {
+        try {
+            const id=req.params.id;
+            const account=await accountsDatabase.findOne({
+                _id:id,
+                deleted:false
+            });
+            if(req.body.password) {
+                 req.body.password=md5(req.body.password);
+            }
+            // console.log(req.body.role_id);
+            await accountsDatabase.updateOne({
+                _id:id,
+                deleted:false
+            }, req.body)
+            req.flash('success','update thanh cong');
+            res.redirect(`${sytem.path.prefixAdmin}/accounts`);
+        } catch (error) {
+            res.redirect(`${sytem.path.prefixAdmin}/accounts`);
         }
-        
-        await accountsDatabase.updateOne({
-            _id:id,
-            deleted:false
-        }, req.body)
-        req.flash('success','update thanh cong');
-        res.redirect(`${sytem.path.prefixAdmin}/accounts`);
-    } catch (error) {
-        res.redirect(`${sytem.path.prefixAdmin}/accounts`);
+    }
+    else{
+        res.send('403');
     }
 }
 
 // [PATCH] /admin/accounts/deleted/:edit
 module.exports.deleted=async(req,res)=>{
-    const id=req.params.id;
-    await accountsDatabase.updateOne({
-        _id:id
-    },{
-        deleted:true
-    })
-    req.flash('success','xoa thanh cong');
-    res.json({
-        code:200
-    }) 
+    if(res.locals.user.permissions.includes('accadmin_delete')){
+        const id=req.params.id;
+        await accountsDatabase.updateOne({
+            _id:id
+        },{
+            deleted:true
+        })
+        req.flash('success','xoa thanh cong');
+        res.json({
+            code:200
+        }) 
+    }
+    else {
+        res.send('403');
+    }
+    
 }
 
 // [GET] /admin/accounts/trash
@@ -131,45 +147,61 @@ module.exports.trash=async(req,res)=>{
 
 // [PATCH] /admin/accounts/trash/back/:id
 module.exports.backAcc=async(req,res)=>{
-    const id=req.params.id;
-    await accountsDatabase.updateOne({
-        _id:id
-    },{
-        deleted:false
-    })
-    req.flash('success','Khôi phục thành công');
-    res.json({
-        code:200
-    })
+    if(res.locals.user.permissions.includes('accadmin_delete')) {
+        const id=req.params.id;
+        await accountsDatabase.updateOne({
+            _id:id
+        },{
+            deleted:false
+        })
+        req.flash('success','Khôi phục thành công');
+        res.json({
+            code:200
+        })
+    }
+    else {
+        res.send('ok');
+    }
 }
 
 
 // [PATCH] /admin/accounts/trash/deleted/:id
 module.exports.deletedVv=async(req,res)=>{
-    const id=req.params.id;
-    await accountsDatabase.deleteOne({
-        _id:id
-    })
-    req.flash('success','Xóa thành công');
-    res.json({
-        code:200
-    })
+    if(res.locals.user.permissions.includes('accadmin_delete')) {
+            const id=req.params.id;
+        await accountsDatabase.deleteOne({
+            _id:id
+        })
+        req.flash('success','Xóa thành công');
+        res.json({
+            code:200
+        })
+    }
+    else {
+        res.send('ok');
+    }
 }
 
 // [PATCH] /admin/accounts/:status/:id
 module.exports.changeStatus=async(req,res)=>{
-    const status=req.params.status;
-    const id=req.params.id;
-    await accountsDatabase.updateOne({
-        _id:id,
-        deleted: false
-    },{
-        status: status
-    })
-    req.flash('success','Thay đổi trạng thái thành công');
-    res.json({
-        code:200
-    })
+    if(res.locals.user.permissions.includes('accadmin_edit')) {
+        const status=req.params.status;
+        const id=req.params.id;
+        await accountsDatabase.updateOne({
+            _id:id,
+            deleted: false
+        },{
+            status: status
+        })
+        req.flash('success','Thay đổi trạng thái thành công');
+        res.json({
+            code:200
+        })
+    }
+    else {
+        res.send('ok');
+    }
+   
 }
 
 // [GET] /admin/accounts/detail/:id

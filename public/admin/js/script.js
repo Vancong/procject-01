@@ -1,35 +1,28 @@
 
-
-// button status
 const listButton=document.querySelectorAll("[button-status");
 if (listButton.length>0) {
     const url= new URL(window.location.href); // tao ra link moi
    listButton.forEach(button => {
-    // console.log(url.href);
         button.addEventListener("click", () => {
             const status=button.getAttribute("button-status");
-            // console.log(status);
             if (status) {
                 url.searchParams.set("status",status);
             }
             else {
                 url.searchParams.delete("status");
             }
-            window.location.href=url.href;  // chuyen sang trang moi
+            window.location.href=url.href; 
         })
    });
     const statusCr=url.searchParams.get("status")|| "";
     const buttonCr=document.querySelector(`[button-status="${statusCr}"]`);
-    // console.log(buttonCr);
    if (buttonCr) {
     buttonCr.classList.add("active");  // them css cho nut hien tai
    }
 }
 
-//   form search
 
-    const fromSearch=document.querySelector("[form-search]");
-    // console.log(fromSearch);
+const fromSearch=document.querySelector("[form-search]");
     if(fromSearch){
         const url=new URL(window.location.href);
         fromSearch.addEventListener("submit",(event) => {
@@ -42,26 +35,23 @@ if (listButton.length>0) {
             else {
                 url.searchParams.delete("keyword");
             }
-            window.location.href=url.href;
-            
-           
+            window.location.href=url.href;    
         });
     }
 // end from  search
 
 // phan trang
-    const buttonPage=document.querySelectorAll(".page-link");
-    // console.log(buttonPage);
-    if (buttonPage.length>0) {
-    let url=new URL(window.location.href);
-    buttonPage.forEach(button => {
-        button.addEventListener("click",()=>{
-            const page=button.getAttribute("page");
-            url.searchParams.set("page",page);
-            window.location.href=url.href;
-        })
-    });
-    }
+const buttonPage=document.querySelectorAll(".page-link");
+if (buttonPage.length>0) {
+let url=new URL(window.location.href);
+buttonPage.forEach(button => {
+    button.addEventListener("click",()=>{
+        const page=button.getAttribute("page");
+        url.searchParams.set("page",page);
+        window.location.href=url.href;
+    })
+});
+}
 //end phan trang
 
 //buttun change status
@@ -92,35 +82,31 @@ if(listButtonChangeStatus.length>0) {
 
 // check box
 
-    // check nut tat ca
-    const checkboxAll=document.querySelector("input[name='checkboxAll']");
-    const listcheckboxItem=document.querySelectorAll("input[name='checkboxItem'");
-    if (checkboxAll) {
-        checkboxAll.addEventListener("click", () => {
-            listcheckboxItem.forEach(checkItem => {
-                checkItem.checked=checkboxAll.checked;
-            })
+const checkboxAll=document.querySelector("input[name='checkboxAll']");
+const listcheckboxItem=document.querySelectorAll("input[name='checkboxItem'");
+if (checkboxAll) {
+    checkboxAll.addEventListener("click", () => {
+        listcheckboxItem.forEach(checkItem => {
+            checkItem.checked=checkboxAll.checked;
         })
-    }
-    //end nut tat ca
+    })
+}
 
-    // tich du 4 nut thi tich nut tat ca
-    listcheckboxItem.forEach(checkbox => {
-        checkbox.addEventListener("click", () =>{
-            const listCheckChecked=document.querySelectorAll("input[name='checkboxItem']:checked");
-            if (listCheckChecked.length==listcheckboxItem.length) {
-                checkboxAll.checked=true;
-            }           
-            else {
-                checkboxAll.checked=false;
-            }
-        })
-    });
-    //end
+listcheckboxItem.forEach(checkbox => {
+    checkbox.addEventListener("click", () =>{
+        const listCheckChecked=document.querySelectorAll("input[name='checkboxItem']:checked");
+        if (listCheckChecked.length==listcheckboxItem.length) {
+            checkboxAll.checked=true;
+        }           
+        else {
+            checkboxAll.checked=false;
+        }
+    })
+});
 
 //end checkbox
 
-// change status nhieu san pham
+//chage multi status
 const boxActions=document.querySelector("[box-actions]");
 if(boxActions) {
     const button=boxActions.querySelector("button");
@@ -161,12 +147,9 @@ if(boxActions) {
        
     })
 }
-//end change
-
 
 //xoa 1 mem  san pham
 const ListbuttonDelete=document.querySelectorAll("[button-delete]");
-// console.log(buttonDelete);
 if(ListbuttonDelete.length>0) {
     ListbuttonDelete.forEach(button => {
         button.addEventListener("click", () =>{
@@ -187,8 +170,6 @@ if(ListbuttonDelete.length>0) {
         })
     
 }
-
-//end xoa mem 1 san pham
 
 // thay doi vi tri 
  const listInputPosition=document.querySelectorAll("input[name='position']");
@@ -217,9 +198,6 @@ if(listInputPosition.length>0) {
     });
 }
 
-
-// end thay doi vi tri
-
 //thong bao thay doi trang thai
 const showAlert=document.querySelector("[show-alert]");
 if(showAlert) {
@@ -230,10 +208,7 @@ if(showAlert) {
     }, time);
 }
 
-//end thong bao
-
 //preview
-
 const uploadImage=document.querySelector("[upload-image");
 if(uploadImage) {
     const uploadInput=uploadImage.querySelector("[upload-image-input]");
@@ -246,14 +221,6 @@ if(uploadImage) {
         }
     })
 }
-
-
-
-
-//end preview
-
-
-
 
 //sort
 const boxSort=document.querySelector("[sort]");
@@ -300,7 +267,6 @@ if(buttonClear) {
 
 
 //deleted role
-
 const btDeletedRole=document.querySelectorAll('[bt-deleted-role]');
 if(btDeletedRole) {
     btDeletedRole.forEach(button => {
@@ -321,12 +287,9 @@ if(btDeletedRole) {
     });
 }
 
-//end deleted role
 
 //phan quyen
-
 const buttonUpdate=document.querySelector('[button-submit]');
-
 if(buttonUpdate) {
     buttonUpdate.addEventListener("click",()=>{
         const table=document.querySelector('[table-permissions]');
@@ -370,11 +333,8 @@ if(buttonUpdate) {
     })
 }
 
-//end phan quyen
-
 
 //accounts
-
     //change status
 const listStatusAcc=document.querySelectorAll('[data-status]');
 if(listStatusAcc){
@@ -393,8 +353,7 @@ if(listStatusAcc){
         })
     });
 }
-    //end change status
-
+    //xoa mem
 const listBtDltAcc=document.querySelectorAll('[button-deleteAcc');
 if(listBtDltAcc){
     listBtDltAcc.forEach(button => {
@@ -412,7 +371,6 @@ if(listBtDltAcc){
         })
     });
 }
-
     //back khoi phuc
 const listButonBackAcc=document.querySelectorAll('[back-acc');
 if(listButonBackAcc) {
@@ -432,9 +390,6 @@ if(listButonBackAcc) {
         })
     });
 }
-
-    //end
-
     //deleted vinh vien
 const ListbuttonDeleteVv=document.querySelectorAll('[deleted-vv]');
 if(ListbuttonDeleteVv){
@@ -453,31 +408,31 @@ if(ListbuttonDeleteVv){
      })
    });
 }
-    //end deleted vv
-
-    //logout
-
-
-    //endlogout
+    
 //end accounts
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// change status product-category
+const changeStatus=document.querySelectorAll('[button-change-status]');
+if(changeStatus.length>0) {
+    changeStatus.forEach(button => {
+        button.addEventListener("click",()=>{
+            const url=button.getAttribute("link");
+            fetch(url,{
+                method:"PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+            .then(res => res.json())
+            .then(data=>{
+                if(data.code==200) {
+                    window.href.reload();
+                }
+            })
+        })
+    });
+}
 
 
 
@@ -499,7 +454,6 @@ if(ListbuttonDeleteVv){
 
  // xoa 1sp vinh vien
 const buttonDeleteVv=document.querySelectorAll("[button-deleteVv]");
-// console.log(buttonDeleteVv); 
 buttonDeleteVv.forEach(button => {
     button.addEventListener("click", () => {
         const id=button.getAttribute("button-deleteVv");
@@ -515,10 +469,6 @@ buttonDeleteVv.forEach(button => {
         
     })
 });
-
-//end xoa vinh vien 1sp
-
-
 
 // khoi phuc 1 san pham
 const listButtonBack=document.querySelectorAll("[button-back");
@@ -541,4 +491,3 @@ if(listButtonBack.length>0) {
     });
 }
 
-// end khoi phuc 1 san pham

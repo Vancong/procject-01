@@ -3,6 +3,10 @@ const Productcategory=require('../../models/product-category.models.js')
 const createTree=require('../../helpers/create-tree.helpers.js')
 const sytem=require('../../config/sytem.js')
 const paginationHelpers=require('../../helpers/pagination.helpers.js')
+const moment=require('moment');
+const accountsDtb = require('../../models/account.models.js');
+const roleDtb = require('../../models/role.models.js');
+// [GET] /admin/product
 module.exports.index= async (req, res) => {
     const find= {
       deleted: false
@@ -23,7 +27,6 @@ module.exports.index= async (req, res) => {
       }
     ];
 
-    // bo loc
     if(req.query.status){
       find.status=req.query.status;
     }
@@ -36,16 +39,8 @@ module.exports.index= async (req, res) => {
         find.title=regax;
         keyword=req.query.keyword;
     }
-
-    //end tim kiem
-
-
     //phan trang
-
     const pagination = await paginationHelpers(req,find);
-
-    //end phan trang  await Prodcut
-
     //sort
     const sort_1={};
     if(req.query.value&&req.query.key) {
@@ -65,10 +60,7 @@ module.exports.index= async (req, res) => {
       .skip(pagination.skip)    // tim  tu trang bao nhieu
       .sort(
           sort_1
-        );
-
-    // console.log(products);
-
+      );
 
     res.render('admin/page/products/index.pug', {
       pageTitle: "Quan ly san pham",
@@ -77,102 +69,105 @@ module.exports.index= async (req, res) => {
       filterStatus:filterStatus,
       pagination: pagination
     });
-  };
-
-   // thay doi trang thai
-   // gui len bang phuong thuc patch
-  module.exports.changeStatus= async (req,res) => {
-    if(res.locals.role.permissions.includes('products_create')) {
-      try {
-        const {id,statusChange}=req.params;
-        await Product.updateOne({
-          _id: id
-        },  {
-          status: statusChange
-      });
-        req.flash('success', 'Cập nhật trạng thái thành công!');
-        res.json( {
-          code:200     
-       });
-        
-      } catch (error) {
-        res.redirect(`${sytem.path.prefixAdmin}/product`);
-      }
-    }
+};
+ 
+  // [PATCH] /admin/product/change-status/:statusChange/:id
+module.exports.changeStatus= async (req,res) => {
+if(res.locals.user.permissions.includes('products_create')) {
+  try {
+    const {id,statusChange}=req.params;
+    await Product.updateOne({
+      _id: id
+    },  {
+      status: statusChange
+    });
+    
+ 
+    req.flash('success', 'Cập nhật trạng thái thành công!');
+    res.json( {
+      code:200     
+    });
+    
+  } catch (error) {
+    res.redirect(`${sytem.path.prefixAdmin}/product`);
   }
-  // end thay doi trang thai
-  // router.patch('/change-multi/:statusChange/:id',productsControllers.changeMulti);
-  module.exports.changeMulti= async (req,res) => {
-    if(res.locals.role.permissions.includes('products_create')) {
-      const {status,idf}=req.body;
-      if(status){
-          if(status=='active'||status=='inactive'){
-              await Product.updateMany({
-                _id: idf
-              },  {
-                status: status
-              });
-          }
-          else if(status=='delete') {
+}
+}
+
+//  [PATCH] /admin/product/change-multi
+module.exports.changeMulti= async (req,res) => {
+  if(res.locals.user.permissions.includes('products_create')) {
+    const {status,idf}=req.body;
+    if(status){
+        if(status=='active'||status=='inactive'){
             await Product.updateMany({
               _id: idf
             },  {
-              deleted:true
+              status: status
             });
-          }
-          else if(status=='back'){
-            await Product.updateMany({
-              _id: idf
-            },{
-              deleted: false
-            })
-            req.flash('success','Khôi phục thành công!')  
-          }
-          else if(status=='deleteAll'){
-            await Product.deleteMany({
-              _id:idf
-            })
-          }
-      }
-    
-      res.json( {
-        code:200     
-      });
+        }
+        else if(status=='delete') {
+          await Product.updateMany({
+            _id: idf
+          },  {
+            deleted:true
+          });
+        }
+        else if(status=='back'){
+          await Product.updateMany({
+            _id: idf
+          },{
+            deleted: false
+          })
+          req.flash('success','Khôi phục thành công!')  
+        }
+        else if(status=='deleteAll'){
+          await Product.deleteMany({
+            _id:idf
+          })
+        }
     }
-    else {
-      res.send('403');
-    } 
-}
-  //xoa mem 1 san pham
-  module.exports.delete= async (req,res) => {
-    if(res.locals.role.permissions.includes('products_delete')) { 
-      try {
-        const id=req.params.id;
-      // console.log(id);
-        await Product.updateOne({
-          _id: id
-        },{
-          deleted: true
-        })
-        req.flash('success','Xóa thành công 1 sản phẩm!')
-        res.json( {  //chuyen js sang json
-            code:200
-        });
-      } catch (error) {
-        res.redirect(`${sytem.path.prefixAdmin}/product`);
-      }
-    }
-    else {
-      res.send('403');
-    } 
+  
+    res.json( {
+      code:200     
+    });
   }
+  else {
+    res.send('403');
+  } 
+}
 
-// end xoa mem
+//  [PATCH] /admin/product/delete/:id
+module.exports.delete= async (req,res) => {
+  if(res.locals.user.permissions.includes('products_delete')) { 
+    try {
+      const id=req.params.id;
+    // console.log(id);
+      await Product.updateOne({
+        _id: id
+      },{
+        deleted: true,
+        deletedBy: res.locals.account.id
+      })
+      
+      req.flash('success','Xóa thành công 1 sản phẩm!')
+      res.json( {  //chuyen js sang json
+          code:200
+      });
+    } catch (error) {
+      res.redirect(`${sytem.path.prefixAdmin}/product`);
+    }
+  }
+  else {
+    res.send('403');
+  } 
+}
 
-// thay doi vi tri sp
 
+
+//  [PATCH] /admin/product//changeposition/:id
 module.exports.changePosition= async(req,res) =>{
-  if(res.locals.role.permissions.includes('products_create')) {
+  if(res.locals.user.permissions.includes('products_create')) {
     const position=req.body.position;
     const id=req.params.id;
     // console.log(position);
@@ -188,13 +183,12 @@ module.exports.changePosition= async(req,res) =>{
       code: 200
     })
   }
+  else {
+    res.send('403');
+  } 
 }
 
-
-//end thay doi vi tri
-
-// them moi san pham
-
+//  [GET] /admin/product/create
 module.exports.create= async (req,res) => {
   const categories=await Productcategory.find({
     deleted: false
@@ -206,8 +200,9 @@ module.exports.create= async (req,res) => {
     categories: newCategories
   });
 }
+//  [POST] /admin/product/create
 module.exports.createProduct= async (req,res) => {
-  if(res.locals.role.permissions.includes('products_create')){
+  if(res.locals.user.permissions.includes('products_create')){
       req.body.price=parseInt(req.body.price);
       req.body.stock=parseInt(req.body.stock);
       req.body.discountPercentage=parseInt(req.body.discountPercentage);
@@ -217,8 +212,10 @@ module.exports.createProduct= async (req,res) => {
       else {
         const cout=await Product.countDocuments()+1;
         req.body.position=cout;
-        // req.body.position=;
       }
+      req.body.createBy=res.locals.account.id;
+      
+      console.log(req.body.createBy);
       const newProduct=new Product(req.body);
       await newProduct.save();
       res.redirect(`${sytem.path.prefixAdmin}/product`);   
@@ -236,10 +233,10 @@ module.exports.createProduct= async (req,res) => {
 
 
 
-//end them moi san pham
 
 
-//edit sp
+
+//  [GET] /admin/product/edit/:id
 module.exports.showEdit=async (req,res) => {
   try {
     const id=req.params.id;
@@ -269,8 +266,9 @@ module.exports.showEdit=async (req,res) => {
   }
 }
 
+//  [PATCH] /admin/product/endEdit/:id
 module.exports.endEdit=async (req,res) =>{
-    if((res.locals.role.permissions.includes('products_create'))){
+    if((res.locals.user.permissions.includes('products_create'))){
       try {
         const id=req.params.id;
           req.body.price=parseInt(req.body.price);
@@ -284,15 +282,13 @@ module.exports.endEdit=async (req,res) =>{
             req.body.position=cout;
             // req.body.position=;
           }
+          req.body.updateBy=res.locals.account.id;
           await Product.updateOne({
             _id:id,
             deleted:false
           },req.body);
           req.flash('success','update thanh cong');
-          res.redirect(`${sytem.path.prefixAdmin}/product`);
-        
-      
-        
+          res.redirect(`${sytem.path.prefixAdmin}/product`);      
       } catch (error) {
         res.redirect(`${sytem.path.prefixAdmin}/product`);
       }
@@ -302,15 +298,42 @@ module.exports.endEdit=async (req,res) =>{
    }
 }
 
-// end edit sp
 
-//chi tiet san pham
+
+// [GET] /admin/product/detail
 module.exports.detail=async (req,res) =>{
   try {
      const id=req.params.id;
      const product=await Product.findOne({
         _id:id
      });
+
+    if(product.createBy) {
+       const accCreate= await accountsDtb.findOne({
+        _id: product.createBy
+       })
+       const permissions= await roleDtb.findOne({
+         _id:accCreate.role_id
+       });
+       product.createAtForMat=moment(product.createdAt).format('DD-MM-YYYY');
+       product.permissionsCreate=permissions.title;
+       product.createByFullName=accCreate.fullName;
+    }
+
+    if(product.updateBy) {
+       const accUpdate= await accountsDtb.findOne({
+        _id: product.updateBy
+       })
+
+       const permissionsUpdate= await roleDtb.findOne({
+         _id:accUpdate.role_id
+       });
+       product.updateAtForMat=moment(product.updatedAt).format('DD-MM-YYYY');
+       product.permissionsUpdate=permissionsUpdate.title;
+       product.updateByFullName=accUpdate.fullName;
+    }
+    
+   
     if(product) {
       res.render('admin/page/products/detail.pug',{
         pageTitle: 'Chi tiết sản phẩm',
@@ -325,7 +348,6 @@ module.exports.detail=async (req,res) =>{
   }
 }
 
-//end detail
 
 
 
@@ -396,9 +418,18 @@ module.exports.detail=async (req,res) =>{
     const products= await Product
       .find(find)   // him tim kiem
       .limit(pagination.limitItem)     // gioi han bao nhieu ban ghi
-      .skip(pagination.skip);     // tim  tu trang bao nhieu
-
+      .skip(pagination.skip);  // tim  tu trang bao nhieu
+    
     // console.log(products);
+    for (const item of products) {
+        if(item.deletedBy) {
+            const accDelete= await accountsDtb.findOne({
+              _id: item.deletedBy
+            });
+            item.nameDelete=accDelete.fullName;
+        }
+        item.deleteAt=moment(item.updateAt).format('DD-MM-YY');
+    }
 
     res.render('admin/page/products/trash.pug', {
       pageTitle: "Trash",
