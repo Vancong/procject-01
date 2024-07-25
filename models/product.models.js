@@ -23,6 +23,7 @@ const productSchema= new mongoose.Schema (
             type:String,
             default: ""
         },
+        productsFeatured: String,
         slug: {
             type: String,
             slug: "title",

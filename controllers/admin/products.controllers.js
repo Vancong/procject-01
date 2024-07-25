@@ -218,6 +218,7 @@ module.exports.createProduct= async (req,res) => {
       console.log(req.body.createBy);
       const newProduct=new Product(req.body);
       await newProduct.save();
+      req.flash('success','Đã thêm mới 1 sản phẩm')
       res.redirect(`${sytem.path.prefixAdmin}/product`);   
     // console.log(req.body);
   }

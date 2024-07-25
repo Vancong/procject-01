@@ -4,7 +4,8 @@ const router=express.Router();
 const controllers=require("../../controllers/client/product.controllers.js");
 
 router.get('/',controllers.index);
-router.get('/:slug',controllers.detail);
+router.get('/:slugCategory',controllers.category);
+router.get('/detail/:slug',controllers.detail);
 
 module.exports=router;
 

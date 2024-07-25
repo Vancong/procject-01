@@ -5,7 +5,7 @@ module.exports.connect= async () => {
     await mongoose.connect(process.env.MONGO_URL);
     console.log('ket noi database thanh cong')
    } catch (error) {
-    console.log('err');
+    console.log('ket noi dtb that bai');
    }
 
 }
