@@ -1,0 +1,112 @@
+extends ../../layout/default.pug
+block main
+  if(user.permissions.includes('products_view'))
+    head
+      title Chi tiết đơn hàng
+      meta(charset="UTF-8")
+      meta(name="viewport" content="width=device-width, initial-scale=1.0")
+      style.
+        body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background-color: #f7f9fc;
+        }
+        .container {
+          width: 90%;
+          max-width: 800px;
+          background-color: #ffffff;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          border-radius: 8px;
+          overflow: hidden;
+          padding: 20px;
+          margin-top: 20px;
+        }
+        h1 {
+          text-align: center;
+          color: #444;
+          margin-bottom: 20px;
+        }
+        .customer-info, .product-list, .order-summary {
+          margin-bottom: 20px;
+        }
+        .customer-info h2, .product-list h2, .order-summary h2 {
+          color: #007BFF;
+          margin-bottom: 10px;
+        }
+        .customer-info p, .product-list p, .order-summary p {
+          margin: 5px 0;
+          color: #555;
+        }
+        table {
+          width: 100% ;
+          
+          border-collapse: collapse;
+          margin-top: 10px;
+        }
+        th, td {
+          padding: 12px;
+          text-align: left;
+          border-bottom: 1px solid #dddddd;
+        }
+        thead th {
+          background-color: #007BFF;
+          color: #ffffff;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          font-size: 14px;
+        }
+        tbody tr {
+          transition: background-color 0.3s ease;
+        }
+        tbody tr:hover {
+          background-color: #f1f1f1;
+        }
+        tbody tr:nth-of-type(even) {
+          background-color: #f9f9f9;
+        }
+        img {
+          max-width: 60px;
+          height: auto;
+          border-radius: 5px;
+        }
+        .order-summary {
+          padding: 15px;
+          border-top: 1px solid #dddddd;
+        }
+        .order-summary p {
+          font-size: 16px;
+        }
+        .order-status {
+          font-weight: bold;
+          color: #28a745;
+        }
+    body
+      .container
+        h1 Chi tiết đơn hàng
+        .customer-info
+          h2 Thông tin khách hàng
+          p Tên: #{orderUser.userInfo.fullName}
+          p Địa chỉ: #{ orderUser.userInfo.address}
+          p Số điện thoại: #{ orderUser.userInfo.phone}
+        .product-list
+          h2 Danh sách sản phẩm
+          table
+            thead
+              tr
+                th STT
+                th Ảnh
+                th Tên sản phẩm
+                th Số lượng
+                th Giá
+            tbody
+              each item,index in orderUser.products
+                tr
+                  td #{index +1}
+                  td: img(src= item.thumbnail, alt=`Sản phẩm ${index+1}`)
+                  td #{item.title}
+                  td #{item.quantity}
+                  td #{item.priceNew}$
+        .order-summary
+          h2 Thông tin đơn hàng
+          p Tổng cộng: #{ orderUser.totalPrice}$
+          p Trạng thái: 
+            span.order-status Đã giao hàng

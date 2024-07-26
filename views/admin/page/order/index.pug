@@ -1,0 +1,104 @@
+extends ../../layout/default.pug
+include ../../mixins/pagination.pug
+block main
+  if(user.permissions.includes('order_view'))
+    title Quản lý đơn hàng
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+      }
+      th, td {
+        padding: 12px 15px;
+        text-align: left;
+      }
+      thead th {
+        background-color: #007BFF;
+        color: #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+      tbody tr {
+        border-bottom: 1px solid #dddddd;
+      }
+      tbody tr:nth-of-type(even) {
+        background-color: #f3f3f3;
+      }
+      tbody tr:last-of-type {
+        border-bottom: 2px solid #007BFF;
+      }
+      img {
+        max-width: 50px;
+        height: auto;
+        border-radius: 5px;
+      }
+      .actions button {
+        margin-right: 5px;
+        padding: 5px 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 3px;
+        transition: background-color 0.3s ease;
+      }
+      .view { 
+        background-color: #28a745; 
+        color: white; 
+      }
+      .view:hover {
+        background-color: #218838;
+      }
+      .edit { 
+        background-color: #ffc107; 
+        color: white; 
+      }
+      .edit:hover {
+        background-color: #e0a800;
+      }
+      .delete { 
+        background-color: #dc3545; 
+        color: white; 
+      }
+      .delete:hover {
+        background-color: #c82333;
+      }
+    h1 Quản lý đơn hàng
+    table
+      thead
+        tr
+          th Số thứ tự
+          th Tên khách hàng
+          th Số điện thoại
+          th Địa chỉ
+          th Hành động
+      tbody
+      each item,index in order
+        tr
+          td #{index+1}
+          td #{item.userInfo.fullName}
+          td #{item.userInfo.phone}
+          td #{item.userInfo.address}
+          td.actions
+            a(
+              class="btn btn-secondary btn-sm"
+              href=`${prefixAdmin}/order/detail/${item.id}`
+            ) Chi tiết
+            if(user.permissions.includes('order_delete'))
+              button(
+                class="btn btn-danger btn-sm ml-1"
+                button-deleteOrder=item.id
+                link=`${prefixAdmin}/order/delete/${item.id}`
+              ) Xóa
+    +pagination(pagination)

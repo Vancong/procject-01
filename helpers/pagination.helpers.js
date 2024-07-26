@@ -1,5 +1,5 @@
 const Product=require('../models/product.models.js')
-module.exports= async (req,find) => {
+module.exports= async (req,find,Prodcut) => {
     const pagination={
         currentPage:1,
         limitItem:4

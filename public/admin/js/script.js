@@ -435,7 +435,24 @@ if(changeStatus.length>0) {
 }
 
 
-
+//order
+const ListButonDeleteOrder=document.querySelectorAll('[button-deleteOrder]');
+if(ListButonDeleteOrder.length>0) {
+    ListButonDeleteOrder.forEach(button => {
+        button.addEventListener("click",()=>{
+            const link=button.getAttribute('link');
+            fetch(link,{
+                method:'PATCH'
+            })
+            .then(res =>res.json())
+            .then(data =>{
+                if(data.code==200) {
+                    window.location.reload();
+                }
+            })
+        })
+    });
+}
 
 
 

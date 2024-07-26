@@ -5,6 +5,7 @@ const role=require('./role.route.js');
 const accounts=require('./accounts.route.js');
 const authen=require('./authen.route.js');
 const profile=require('./profile.route.js')
+const order=require('./order.route.js');
 const authenMiddlewares=require('../../middlewares/admin/authen.middewares.js');
 const renameLink=require('../../config/sytem.js');
 
@@ -17,4 +18,5 @@ module.exports.index=(app) => {
     app.use(`${path}/accounts`,authenMiddlewares,accounts);
     app.use(`${path}/authen`,authen);
     app.use(`${path}/profile`,authenMiddlewares,profile);
+    app.use(`${path}/order`,authenMiddlewares,order);
 }

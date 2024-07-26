@@ -9,6 +9,9 @@
       if(user.permissions.includes('products-category_view'))
         li 
           a(href=`${prefixAdmin}/product-category`) Danh mục sản phẩm
+      if(user.permissions.includes('order_view'))
+        li 
+            a(href=`${prefixAdmin}/order`) Quản lý đơn hàng
       if(user.permissions.includes('role_view'))
         li
           a(href=`${prefixAdmin}/role`) Nhóm quyền

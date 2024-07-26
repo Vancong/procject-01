@@ -69,6 +69,30 @@ block main
           
           tr
             td(colspan="4")
+              b Quản lí đơn hàng
+          tr
+            td Xem
+            each item in records
+              td(class="text-center")
+                input(
+                  type="checkbox" 
+                  data-id=item.id 
+                  data-name="order_view"
+                  checked=(item.permissions.includes("order_view") ? true : false)
+                )
+          tr
+            td Xóa
+            each item in records
+              td(class="text-center")
+                input(
+                  type="checkbox" 
+                  data-id=item.id
+                  data-name="order_delete"
+                  checked=(item.permissions.includes("order_delete") ? true : false)
+                )
+
+          tr
+            td(colspan="4")
               b Sản phẩm
           tr
             td Xem
