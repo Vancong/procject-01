@@ -48,6 +48,13 @@ module.exports.loginPost= async(req,res) =>{
         res.redirect('back');
         return;
    }
+
+   if(user.status=='inactive'){
+        req.flash('error','Tài khoản đã bị khóa');
+        res.redirect('back');
+        return;
+   }
+
    if(password==user.password) {
         res.cookie('tokenUser',user.tokenUser);
         req.flash('success','Đăng nhập thành công');
@@ -68,13 +75,20 @@ module.exports.forgotPassword=(req,res) =>{
 
 //[PATCH] /user/password/forgot
 module.exports.forgotPasswordPatch=async(req,res) =>{
-    const email=await userDtb.findOne({
+    const user=await userDtb.findOne({
         email: req.body.email
     });
-    if(!email) {
+    if(!user) {
         req.flash('error','Email không tồn tại trong hệ thống');
         res.redirect('back');
+        return;
     }
+
+    if(user.status=='inactive'){
+        req.flash('error','Tài khoản đã bị khóa');
+        res.redirect('back');
+        return;
+   }
     //tao ma otp luu vao dtb
     const otp=generate.generateRandomNumber(6);
     const forgotPassword={
@@ -88,6 +102,25 @@ module.exports.forgotPasswordPatch=async(req,res) =>{
     res.redirect(`/user/password/otp?email=${req.body.email}`);
 }
 
+//[GET] /user/password/resetOtp/:email
+module.exports.resetOtp=async(req,res)=>{
+    const emailUser=req.params.email;
+    const email=await userDtb.findOne({
+        email: emailUser
+    });
+    await forgotPasswordDtb.deleteMany({
+        email: emailUser
+    })
+    //tao ma otp luu vao dtb
+    const otp=generate.generateRandomNumber(6);
+    const forgotPassword={
+        otp:otp,
+        email: emailUser,
+        expireAt: Date.now()+(3*60*1000)
+    }
+    const forgot= new forgotPasswordDtb(forgotPassword);
+    await forgot.save();
+}
 
 //[GET] /user/password/otp/email
 module.exports.otp= (req,res) =>{

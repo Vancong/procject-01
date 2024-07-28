@@ -83,7 +83,7 @@ module.exports.editPatch=async(req,res) =>{
             },
                 req.body
             )
-            req.flash('success','cap nhat thanh cong');
+            req.flash('success','Cập nhật thành công');
             res.redirect(`${sytem.path.prefixAdmin}/role`);
         } catch (error) {
             res.redirect(`${sytem.path.prefixAdmin}/role`);

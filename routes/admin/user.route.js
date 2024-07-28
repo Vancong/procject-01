@@ -1,8 +1,13 @@
 const express=require("express");
 const router=express.Router();
-const user=require("../../controllers/admin/user.controllers.js");
+const userControllers=require("../../controllers/admin/user.controllers.js");
 
-router.get('/',user.index);
+router.get('/',userControllers.index);
 
+router.patch('/:status/:id',userControllers.changeStatus);
+
+router.get('/edit/:id',userControllers.edit);
+
+router.post('/edit/:id',userControllers.editP);
 
 module.exports=router;

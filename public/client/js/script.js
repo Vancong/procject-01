@@ -148,6 +148,20 @@ if(btCheckout) {
         })
     })
 }
+//resetotp
+const buttonReset=document.querySelector('.resetOtp');
+if(buttonReset) {
+    buttonReset.addEventListener("click" ,()=>{
+        const link=buttonReset.getAttribute('link');
+        fetch(link,{
+            method:'PATCH'
+        })
+        .then(res =>res.json())
+        .then(data=>{
+            
+        })
+    })
+}
 
 // Swal.fire({
 //     position: "center",

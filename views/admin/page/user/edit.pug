@@ -1,0 +1,62 @@
+extends ../../layout/default.pug
+block main
+    h1(class="mb-4") Chỉnh sửa tài khoản
+    form(
+        action=`${prefixAdmin}/user/edit/${userAccount.id}`
+      method="POST"
+    )
+      div(class="form-group")
+        label(for="fullName") Họ tên *
+        input(
+          type="text"
+          class="form-control"
+          id="fullName"
+          name="fullName"
+          value=userAccount.fullName
+          required
+        )
+      div(class="form-group")
+        label(for="email") Email *
+        input(
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          value=userAccount.email
+          required
+        )
+      div(class="form-group")
+        label(for="password") Mật khẩu *
+        input(
+          type="password"
+          class="form-control"
+          id="password"
+          name="password"
+          value=userAccount.password
+          required
+        )
+      div(class="form-group form-check form-check-inline")
+        input(
+          type="radio"
+          class="form-check-input"
+          id="statusActive"
+          name="status"
+          value="active"
+          checked=(userAccount.status=='active'?true:false)
+        )
+        label(for="statusActive" class="form-check-label") Hoạt động
+      div(class="form-group form-check form-check-inline")
+        input(
+          type="radio"
+          class="form-check-input"
+          id="statusInActive"
+          name="status"
+          value="inactive"
+          checked=(userAccount.status=='inactive'?true:false)
+        )
+        label(for="statusInActive" class="form-check-label") Dừng hoạt động
+      div(class="form-group")
+        button(
+          type="submit"
+          class="btn btn-primary"
+        ) Cập Nhật

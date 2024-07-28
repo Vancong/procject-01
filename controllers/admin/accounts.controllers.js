@@ -3,7 +3,6 @@ const roleDatabase=require('../../models/role.models');
 const generate=require('../../helpers/generate.helpers.js');
 const accountsDatabase=require('../../models/account.models.js');
 const sytem=require('../../config/sytem.js');
-
 const md5 = require('md5');
 // [GET] /admin/accounts/
 module.exports.index=async(req,res) =>{

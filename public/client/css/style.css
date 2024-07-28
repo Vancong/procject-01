@@ -204,3 +204,11 @@
   display: none;
 }
 /* End product-detail */
+
+.resetOtp {
+  border: 1px white;
+  background-color: white;
+  color: rgb(56, 56, 241);
+  font-size: 16px;
+  cursor: pointer;
+}

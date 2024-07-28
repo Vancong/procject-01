@@ -454,7 +454,23 @@ if(ListButonDeleteOrder.length>0) {
     });
 }
 
-
+const buttonChangeStatusUser=document.querySelectorAll('[linkUser]');
+if(buttonChangeStatusUser.length>0) {
+    buttonChangeStatusUser.forEach(button => {
+        button.addEventListener("click",()=>{
+            const link=button.getAttribute('linkUser');
+            fetch(link,{
+                method:'PATCH'
+            })
+            .then(res =>res.json())
+            .then(data =>{
+                if(data.code==200) {
+                    window.location.reload();
+                }
+            })
+        })
+    });
+}
 
 
 
