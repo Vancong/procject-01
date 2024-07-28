@@ -77,10 +77,7 @@ module.exports.detail=async (req,res) =>{
     const cart=await cartDtb.findOne({
         _id:cartId,
     });
-    // console.log(product.id);
-    // console.log(cart);
     const currentProduct= cart.products.find(item=> item.productId==product.id)||0;
-    // console.log(currentProduct.quantity);
     if (product) {
         product.priceNew = ((1 - product.discountPercentage/100) * product.price).toFixed(0);
         res.render('client/pages/product/detail.pug',{

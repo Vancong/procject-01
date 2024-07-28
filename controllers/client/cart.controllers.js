@@ -1,4 +1,5 @@
 const cartDtb=require('../../models/cart.models');
+const productDtb = require('../../models/product.models');
 const productsDtb=require('../../models/product.models');
 //[POST] /cart/add
 module.exports.addPost=async (req,res) =>{
@@ -98,21 +99,34 @@ module.exports.delete=async(req,res) =>{
     }
 }
 
-//[GET] /cart/:productId/:id
+//[GET] /cart/:productId/:id  change quantity
 module.exports.changeQuantity= async (req,res) =>{
     try {
         const productId=req.params.productId;
-        const quantity=parseInt(req.params.quantity);
+        const quantityChange=parseInt(req.params.quantity);
         const cartId=req.cookies.cartId;
-        await cartDtb.updateOne({
-            _id:cartId,
-            'products.productId':productId
-        },{
-            $set:{
-                'products.$.quantity': quantity
-            }
-        })
-        res.redirect('back');
+        const product=await productDtb.findOne({
+            _id:productId
+        });
+        const stock=product.stock;
+     
+        if(stock>= quantityChange) {
+            await cartDtb.updateOne({
+                _id:cartId,
+                'products.productId':productId
+            },{
+                $set:{
+                    'products.$.quantity': quantityChange
+                }
+            })
+            req.flash('success','Cập nhật thành công');
+            res.redirect('back');
+        }
+        else{
+            req.flash('error','Bạn đã nhập quá số lượng');
+            res.redirect('back');
+        }
+      
     } catch (error) {
         res.redirect('back');
     }

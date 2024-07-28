@@ -12,6 +12,15 @@ if(changequantityProduct){
     });
 }
 
+const showAlert=document.querySelector("[show-alert]");  //be
+if(showAlert) {
+    let time=showAlert.getAttribute("[show-alert")||3000;
+    time=parseInt(time);
+    setTimeout(() => {
+        showAlert.classList.add("hidden");
+    }, time);
+}
+
 //them alert
 const buttonAddProduct=document.querySelectorAll('[bt-cart]');
 if(buttonAddProduct.length>0){
@@ -20,42 +29,45 @@ if(buttonAddProduct.length>0){
             const quantityAdd=document.querySelector('[quantity-addCart]'); //so luong muon them vao gio hang
             const quantityInCart=parseInt(button.getAttribute('quantity-inCart')); //so luong trong gio hang
             const productStock=parseInt(button.getAttribute('product-stock')); // so luong ton kho
-            const totalQuantity=parseInt(quantityInCart+quantityAdd);
-            console.log(totalQuantity); 
+            const totalQuantity=quantityInCart+quantityAdd.value;
             if(totalQuantity>productStock) {
                 Swal.fire({
                     icon: "error",
                     title: `Bạn đã có ${quantityInCart} sản phẩm trong giỏ hàng. Không
                     thể thêm số lượng đã chọn vào giỏ hàng vì sẽ vượt quá giới hạn mua hàng của bạn`,
                     text:  "Vui lòng nhập lại",
-                    showConfirmButton: true
+                    showConfirmButton: true,
+                    timer: null
                 });
             }
-            else if(productStock<quantityAdd.value){
-                Swal.fire({
-                    icon: "error",
-                    title: "Số lượng hàng không đủ",
-                    text:  "Vui lòng nhập lại",
-                    showConfirmButton: true
-                });
-            }
-            else if(quantityAdd.value>0){
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: 'Đã thêm vào giỏ hàng',
-                    showConfirmButton: false,
-                    timer: 2000
-                });
-            }    
             else {
-                Swal.fire({
-                    icon: "error",
-                    title: "Vui lòng thêm ít nhất 1 sản phẩm",
-                    text:  "Vui lòng nhập lại",
-                    timer: 1500
-                });
+                if(productStock<quantityAdd.value){
+                    Swal.fire({
+                        icon: "error",
+                        title: "Số lượng hàng không đủ",
+                        text:  "Vui lòng nhập lại",
+                        showConfirmButton: true,
+                    });
+                }
+                else if(quantityAdd.value>0){
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: 'Đã thêm vào giỏ hàng',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                }    
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Vui lòng thêm ít nhất 1 sản phẩm",
+                        text:  "Vui lòng nhập lại",
+                        timer: 1500
+                    });
+                }
             }
+          
         })
    });
  

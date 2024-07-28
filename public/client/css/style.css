@@ -194,4 +194,13 @@
   padding: 3px 6px;
   border-radius: 8px;
 }
+.show-alert {
+  position: fixed;
+  top: 105px;
+  right: 20px;
+  z-index: 999;
+}
+.hidden {
+  display: none;
+}
 /* End product-detail */
