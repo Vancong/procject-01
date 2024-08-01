@@ -163,6 +163,23 @@ if(buttonReset) {
     })
 }
 
+//show pass 
+const passwordToggle=document.querySelector('#password-toggle');
+if(passwordToggle) {
+     passwordToggle.addEventListener("change",()=>{
+         const inputPassword=document.querySelector('.password-toggle');
+         if(passwordToggle.checked) {
+            if(inputPassword!=null) {
+                inputPassword.setAttribute('type','text');
+            }
+         }
+         else {
+            if(inputPassword!=null) {
+                inputPassword.setAttribute('type','password');
+            }       
+         }
+     })
+}
 // Swal.fire({
 //     position: "center",
 //     icon: "success",

@@ -1,7 +1,10 @@
 const userDtb=require('../../models/user.models');
 const forgotPasswordDtb=require('../../models/forgot-password.models');
 const generate=require('../../helpers/generate.helpers');
+const sendEmailHelpers=require('../../helpers/sendEmail.helpers');
+const htmlSendMailHelpers=require('../../helpers/htmlSendMail.js');
 const md5=require('md5');
+const htmlSendMail = require('../../helpers/htmlSendMail.js');
 //[GET] /user/register
 module.exports.register=(req,res) =>{
 
@@ -99,28 +102,51 @@ module.exports.forgotPasswordPatch=async(req,res) =>{
     const forgot= new forgotPasswordDtb(forgotPassword);
     await forgot.save();
 
+    //
+    const subject='helluuu';
+    const titleHtml='Lấy Lại Mật Khẩu';
+    const noteHtml='Sử dụng mã OTP này để lấy lại mật khẩu của bạn';
+    const htmlSendMail=htmlSendMailHelpers(otp,titleHtml,noteHtml);
+    sendEmailHelpers.sendEmail(req.body.email,subject,htmlSendMail);
+
+
     res.redirect(`/user/password/otp?email=${req.body.email}`);
 }
 
-//[GET] /user/password/resetOtp/:email
-module.exports.resetOtp=async(req,res)=>{
-    const emailUser=req.params.email;
-    const email=await userDtb.findOne({
-        email: emailUser
-    });
-    await forgotPasswordDtb.deleteMany({
-        email: emailUser
-    })
-    //tao ma otp luu vao dtb
-    const otp=generate.generateRandomNumber(6);
-    const forgotPassword={
-        otp:otp,
-        email: emailUser,
-        expireAt: Date.now()+(3*60*1000)
-    }
-    const forgot= new forgotPasswordDtb(forgotPassword);
-    await forgot.save();
-}
+// //[PATCH] /user/password/resetOtp/:email
+// module.exports.resetOtp = async (req, res) => {
+//     try {
+//       const emailUser = req.params.email;
+//       const email = await userDtb.findOne({
+//         email: emailUser,
+//       });
+  
+//       // Xóa tất cả các yêu cầu quên mật khẩu trước đó của người dùng
+//       await forgotPasswordDtb.deleteMany({
+//         email: emailUser,
+//       });
+  
+//       // Tạo mã OTP mới và lưu vào cơ sở dữ liệu
+//       const otp = generate.generateRandomNumber(6);
+//       const forgotPassword = {
+//         otp: otp,
+//         email: emailUser,
+//         expireAt: Date.now() + 3 * 60 * 1000, // 3 phút
+//       };
+//       const forgot = new forgotPasswordDtb(forgotPassword);
+//       await forgot.save();
+  
+//       // Gửi email chứa mã OTP cho người dùng
+//       const subject = 'helluuu';
+//       const titleHtml = 'Lấy Lại Mật Khẩu';
+//       const noteHtml = 'Sử dụng mã OTP này để lấy lại mật khẩu của bạn';
+//       const htmlSendMail = htmlSendMailHelpers(otp, titleHtml, noteHtml);
+//       await sendEmailHelpers.sendEmail(emailUser, subject, htmlSendMail);
+  
+//     } catch (error) {
+
+//     }
+//   };
 
 //[GET] /user/password/otp/email
 module.exports.otp= (req,res) =>{

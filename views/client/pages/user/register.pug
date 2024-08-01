@@ -33,11 +33,18 @@ block main
             label(for="password") Mật khẩu
             input(
               type="password"
-              class="form-control"
+              class="form-control password-toggle"
               id="password"
               name="password"
               required
             )
+
+          div(class="form-group")
+            input(type="checkbox" 
+                  id="password-toggle"
+            ) 
+            label(for="password-toggle") Hiển thị mật khẩu
+
           div(class="form-group")
             button(
               type="submit"

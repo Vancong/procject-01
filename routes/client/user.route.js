@@ -20,7 +20,7 @@ router.get('/password/otp',userControllers.otp);
 
 router.patch('/password/otp',userControllers.otpPatch);
 
-router.patch('/password/resetOtp/:email',userControllers.resetOtp);
+// router.patch('/password/resetOtp/:email',userControllers.resetOtp);
 
 router.get('/password/reset',userControllers.resetPass);
 

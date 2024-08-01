@@ -6,7 +6,14 @@ header.header
       .col-2
         .inner-logo
           a(href="/")
-            //- img(src="/images/logo.svg", alt="Logo")
+            img(src=setting.logo? setting.logo : "", alt="Logo")
+          br 
+          span #{setting.websiteName}
+          br 
+          span Địa chỉ: #{setting.address} 
+          br
+          span Số điện thoại: #{setting.phone}
+
       .col-6
         form(
           action="/search"
@@ -38,7 +45,7 @@ header.header
             
             if(user)
                li  
-                 a(href=`/user/detail/${user.id}`) #{user.fullName} 
+                 a(href=`/profile`) #{user.fullName} 
                  br
                  a(href="/user/logout") Đăng xuất 
             else 
