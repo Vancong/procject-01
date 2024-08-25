@@ -44,6 +44,8 @@ header.header
               a(href="/cart") <i class="fa-solid fa-cart-shopping"></i> (#{cartTotal})
             
             if(user)
+               li
+                 a(href="/chat") <i class="fa-brands fa-rocketchat"></i> 
                li  
                  a(href=`/profile`) #{user.fullName} 
                  br

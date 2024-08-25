@@ -5,4 +5,35 @@ block main
     h2 Quyền: #{account.permissions}
     p Email: #{account.email}
     img(src=account.avatar, alt="" width="200px")
-    p #{staus}
+
+    .col-6
+      .card.mb-4
+        .card-header Sản phẩm
+        .card-body
+          p Số lượng: <b>#{data.product.total} </b>
+          p Hoạt động: <b> #{data.product.active}</b>
+          p Dừng hoạt động: <b> #{data.product.inactive}</b>
+
+    .col-6
+      .card.mb-4
+        .card-header Tài khoản Admin
+        .card-body
+          p Số lượng: <b>#{data.accAdmin.total}</b>
+          p Hoạt động: <b>#{data.accAdmin.active}</b>
+          p Dừng hoạt động: <b>#{data.accAdmin.inactive}</b>
+
+    .col-6
+      .card.mb-4
+        .card-header Đơn hàng
+        .card-body
+          p Số lượng: <b>#{data.order.total}</b>
+        //-   p Hoạt động: <b>3</b>
+        //-   p Dừng hoạt động: <b>2</b>
+
+    .col-6
+      .card.mb-4
+        .card-header Tài khoản User
+        .card-body
+          p Số lượng: <b>#{data.user.total}</b>
+          p Hoạt động: <b>#{data.user.active}</b>
+          p Dừng hoạt động: <b>#{data.user.inactive}</b>

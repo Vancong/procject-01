@@ -2,8 +2,14 @@ const express = require('express')  // nhung thu vien
 const bodyParser=require('body-parser');
 const app = express();
 const path = require('path');
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
 require('dotenv').config();    // bao mat
 const port =process.env.PORT;
+
+global.io=io;
 
 //method
 const methodOverride = require('method-override');
@@ -48,10 +54,17 @@ app.locals.prefixAdmin=configSyem.path.prefixAdmin;   // link path la object pat
 // bien prefixAdmin dung duoc cho tat ca file pug
 
 
-
 routeClient.index(app);  // goi ham 
 routeAdmin.index(app);
 
-app.listen(port, () => {
+// * tru nhung route chua dc dinh nghia la 404
+app.get("*", (req, res) => {
+  res.render("client/pages/errors/404", {
+    pageTitle: "404 Not Found"
+  });
+});
+
+
+server.listen(port, () => {
   console.log(`hello ${port}`)
 })

@@ -5,6 +5,7 @@ const checkoutRoute=require('./checkout.route.js');
 const cartRoute=require('./cart.route.js');
 const userRoute=require('./user.route.js');
 const profileRoute=require('./profile.route.js');
+const chatRoute=require('./chat.route.js');
 const CategoryMiddlewares=require('../../middlewares/client/category.middlewares.js');
 const cartMiddlewares=require('../../middlewares/client/cart.middlewares.js');
 const settingMiddlewares=require('../../middlewares/client/setting.middlewares.js');
@@ -21,4 +22,5 @@ module.exports.index=(app) => {
     app.use("/checkout",checkoutRoute);
     app.use("/user",userRoute);
     app.use("/profile",profileRoute);
+    app.use("/chat",authenUserMiddlewares.requireAuthen,chatRoute);
 }

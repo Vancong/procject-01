@@ -1,6 +1,7 @@
 const express=require("express");
 const router=express.Router();
 const userControllers=require("../../controllers/client/user.controllers.js");
+const tokenMiddlewares=require('../../middlewares/client/authenUser.middlewares.js');
 
 router.get('/register',userControllers.register);
 
@@ -22,9 +23,9 @@ router.patch('/password/otp',userControllers.otpPatch);
 
 // router.patch('/password/resetOtp/:email',userControllers.resetOtp);
 
-router.get('/password/reset',userControllers.resetPass);
+router.get('/password/reset', tokenMiddlewares.requireAuthen,userControllers.resetPass);
 
-router.patch('/password/reset',userControllers.resetPassPatch);
+router.patch('/password/reset',tokenMiddlewares.requireAuthen,userControllers.resetPassPatch);
 
 module.exports=router;
 
